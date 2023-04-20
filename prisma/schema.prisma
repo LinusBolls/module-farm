@@ -1,0 +1,40 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id                String           @id @default(auto()) @map("_id") @db.ObjectId
+  email             String           @unique
+  name              String
+  image             String
+  builds            Build[]
+  minecraftAccount  MinecraftAccount? @relation(fields: [minecraftAccountId], references: [id])
+  minecraftAccountId String?          @unique @db.ObjectId
+  createdAt         DateTime         @default(now())
+  updatedAt         DateTime         @default(now()) @updatedAt
+}
+
+model MinecraftAccount {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  mojangId          String
+  username          String
+  user              User?
+}
+
+
+model Build {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+  category    String
+  images      String[]
+  user        User     @relation(fields: [userId], references: [id])
+  userId      String   @db.ObjectId
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now()) @updatedAt
+}
