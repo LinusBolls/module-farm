@@ -8,24 +8,24 @@ generator client {
 }
 
 model User {
-  id                String           @id @default(auto()) @map("_id") @db.ObjectId
-  email             String           @unique
-  name              String
-  image             String
-  builds            Build[]
-  minecraftAccount  MinecraftAccount? @relation(fields: [minecraftAccountId], references: [id])
-  minecraftAccountId String?          @unique @db.ObjectId
-  createdAt         DateTime         @default(now())
-  updatedAt         DateTime         @default(now()) @updatedAt
+  id                 String            @id @default(auto()) @map("_id") @db.ObjectId
+  email              String            @unique
+  username           String            @unique
+  password           String
+  avatarUrl          String?
+  builds             Build[]
+  minecraftAccount   MinecraftAccount? @relation(fields: [minecraftAccountId], references: [id])
+  minecraftAccountId String?           @unique @db.ObjectId
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @default(now()) @updatedAt
 }
 
 model MinecraftAccount {
-  id                String   @id @default(auto()) @map("_id") @db.ObjectId
-  mojangId          String
-  username          String
-  user              User?
+  id       String @id @default(auto()) @map("_id") @db.ObjectId
+  mojangId String
+  username String
+  user     User?
 }
-
 
 model Build {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
