@@ -1,38 +1,32 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# module farm
 
-## Getting Started
+## about
+in the hit building-focused videogame [minecraft](https://www.minecraft.net), users are able to save structures to their file system using the structure block (added in minecraft v1.9).
+while there are already some online solutions to share minecraft buildings, this project aims to provide an improved user experience.
 
-First, run the development server:
+![structure block](https://static.wikia.nocookie.net/minecraft_gamepedia/images/0/05/Structure_Block_JE2_BE1.png/revision/latest?cb=20200317230650)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+### features
+- uploading minecraft structures as .nbt files
+- viewing uploaded structures as posts, downloading them, providing step-by-step manuals for building them
+- reacting to other people's buildings
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## setup
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+### tested with
+- MacBook Air (M2, 2022), running macOS Ventura (v13.3.1)
+- Docker v20.10.24
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+### prerequisites
+- Docker ([https://docs.docker.com/get-docker/](https://docs.docker.com/get-docker/))
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+### development setup
+1. clone the repo: `$ git clone https://github.com/LinusBolls/module-farm`.
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2. run `$ npm i` to enable intellisense in your code editor.
 
-## Learn More
+3. run `$ npm run start-dev` to start the development docker container with hot reload at [http://localhost:3000](http://localhost:3000).
 
-To learn more about Next.js, take a look at the following resources:
+4. **EXCEPTION TO HOT RELOAD:** if you make changes to `/prisma/schema.prisma`, you will need to run `$ npm run build-prisma`. keep in mind that changing between commits or branches may also affect `/prisma/schema.prisma`!
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+5. after you're done developing, simply run `$ npm run stop-dev` to stop the development docker container.

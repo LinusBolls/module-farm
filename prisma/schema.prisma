@@ -11,8 +11,8 @@ generator client {
 model User {
   id                 String            @id @default(auto()) @map("_id") @db.ObjectId
   email              String            @unique
-  username           String
-  password           String       
+  username           String            @unique
+  password           String
   avatarUrl          String?
   builds             Build[]
   minecraftAccount   MinecraftAccount? @relation(fields: [minecraftAccountId], references: [id])

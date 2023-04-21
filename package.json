@@ -3,6 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "start-dev": "sh scripts/startDockerCompose.sh",
+    "stop-dev": "docker compose stop",
+    "build-prisma": "prisma generate && docker compose up -d --build && docker exec modulefarm npx prisma db push",
+  
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
