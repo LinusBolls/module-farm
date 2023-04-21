@@ -7,7 +7,6 @@ generator client {
   provider = "prisma-client-js"
 }
 
-
 model User {
   id                 String            @id @default(auto()) @map("_id") @db.ObjectId
   email              String            @unique
@@ -15,8 +14,7 @@ model User {
   password           String
   avatarUrl          String?
   builds             Build[]
-  minecraftAccount   MinecraftAccount? @relation(fields: [minecraftAccountId], references: [id])
-  minecraftAccountId String?           @unique @db.ObjectId
+  minecraftAccount   MinecraftAccount?
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @default(now()) @updatedAt
 }
@@ -26,7 +24,8 @@ model MinecraftAccount {
   id       String @id @default(auto()) @map("_id") @db.ObjectId
   mojangId String
   username String
-  user     User?
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @unique @db.ObjectId // relation scalar field (used in the `@relation` attribute above)
 }
 
 model Build {
