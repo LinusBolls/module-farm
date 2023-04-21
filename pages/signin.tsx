@@ -3,7 +3,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { useMutation } from "react-query";
 import axios from "axios";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 
 interface SignInFormData {
   username: string;
@@ -23,6 +23,7 @@ const LoginPage: React.FC = () => {
   } = useForm<SignInFormData>({
     resolver: yupResolver(schema),
   });
+  const session = useSession()
 
   const onSubmit = async (data: SignInFormData) => {
     const result = await signIn("credentials", {
@@ -38,6 +39,7 @@ const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      <h2>{session.status}</h2>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           Sign in to your account
