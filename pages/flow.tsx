@@ -245,7 +245,7 @@ const OverviewFlow = () => {
                         fitView
                         attributionPosition="top-right"
                         nodeTypes={nodeTypes}
-
+                        proOptions={{ hideAttribution: true }}
                         ref={reactFlowRef}
                     >
                         <MiniMap style={minimapStyle} zoomable pannable />
