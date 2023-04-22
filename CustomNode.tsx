@@ -106,7 +106,7 @@ function CustomNode({ id, data }) {
 
           backgroundColor: "white",
         }}>
-          <Handle type="source" position={Position.Top} id={Object.keys(data.selects)[0]} style={{
+          <Handle type="target" position={Position.Top} id={Object.keys(data.selects)[0]} style={{
             // position: "absolute",
             // top: 0,
           }} />

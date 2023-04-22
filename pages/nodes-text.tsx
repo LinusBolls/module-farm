@@ -44,6 +44,11 @@ const OverviewFlow = () => {
 
 
     const itemTypes = {
+        defaultfolder: {
+            id: "defaultfolder",
+            displayName: "default folder",
+            iconUrl: null,
+        },
         notion: {
             id: "notion",
             displayName: "Notion",
@@ -59,11 +64,11 @@ const OverviewFlow = () => {
             displayName: "OpenAI",
             iconUrl: "https://cdn.example.com/icons/openai.svg",
         },
-        defaultfolder: {
-            id: "defaultfolder",
-            displayName: "default folder",
-            iconUrl: null,
-        },
+        whisper: {
+            id: "whisper",
+            displayName: "Whisper ai",
+            iconUrl: "https://cdn.example.com/icons/openai.svg",
+        },    
     };
 
     const items = {
@@ -78,7 +83,7 @@ const OverviewFlow = () => {
         "4": {
             id: "4",
             parentId: null,
-            childrenIds: [],
+            childrenIds: ["5", "6", "7", "8"],
             type: "defaultfolder",
             containerType: "FOLDER",
             displayName: "Components"
@@ -98,6 +103,40 @@ const OverviewFlow = () => {
             type: "defaultfolder",
             containerType: "FOLDER",
             displayName: "Your files"
+        },
+
+
+        "5": {
+            id: "5",
+            parentId: null,
+            childrenIds: [],
+            type: "openai",
+            containerType: "FILE",
+            displayName: "GPT-4 Product Prompt"
+        },
+        "6": {
+            id: "6",
+            parentId: null,
+            childrenIds: [],
+            type: "whisper",
+            containerType: "FILE",
+            displayName: "Whisper API"
+        },
+        "7": {
+            id: "7",
+            parentId: null,
+            childrenIds: [],
+            type: "notion",
+            containerType: "FILE",
+            displayName: "Notion API"
+        },
+        "8": {
+            id: "8",
+            parentId: null,
+            childrenIds: [],
+            type: "slack",
+            containerType: "FILE",
+            displayName: "Slack API"
         },
     };
 
