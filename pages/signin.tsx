@@ -36,9 +36,10 @@ const LoginPage: React.FC = () => {
       console.error("Error logging in:", result?.error);
     }
   };
+  // if (typeof window !== "undefined") alert(JSON.stringify(session, null, 2))
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gray-900 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <h2>{session.status}</h2>
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
@@ -46,17 +47,17 @@ const LoginPage: React.FC = () => {
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
+        <div className="bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
             <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="username" className="block text-sm font-medium text-gray-500">
                 Username
               </label>
               <div className="mt-1">
                 <input
                   type="text"
                   {...register("username")}
-                  className={`text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md ${
+                  className={`px-3 h-10 text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md ${
                     errors.username ? "border-red-500" : ""
                   }`}
                 />
@@ -67,14 +68,14 @@ const LoginPage: React.FC = () => {
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-500">
                 Password
               </label>
               <div className="mt-1">
                 <input
                   type="password"
                   {...register("password")}
-                  className={`text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md ${
+                  className={`px-3 h-10 text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md ${
                     errors.password ? "border-red-500" : ""
                   }`}
                 />
