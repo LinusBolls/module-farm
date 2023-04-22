@@ -1,8 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { useMutation } from "react-query";
-import axios from "axios";
 import { signIn, useSession } from "next-auth/react";
 
 interface SignInFormData {

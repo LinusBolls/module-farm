@@ -7,7 +7,8 @@ const nextConfig = {
     }
     return config
   },
-  reactStrictMode: true,
+  // important for react-beautiful-dnd to work
+  reactStrictMode: false,
 }
 
 module.exports = nextConfig

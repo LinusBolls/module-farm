@@ -5,6 +5,7 @@
   "scripts": {
     "start-dev": "sh scripts/startDockerCompose.sh",
     "stop-dev": "docker compose stop",
+    "restart-dev": "npm run stop-dev && npm run start-dev",
     "build-prisma": "prisma generate && docker compose up -d --build && docker exec modulefarm npx prisma db push",
     "dev": "next dev",
     "build": "next build",
@@ -12,6 +13,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.18",
+    "@chakra-ui/react": "^2.5.5",
+    "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@hookform/resolvers": "^3.1.0",
     "@next-auth/prisma-adapter": "^1.0.1",
     "@prisma/client": "^4.13.0",
@@ -24,21 +29,25 @@
     "bcrypt": "^5.1.0",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
+    "framer-motion": "^10.12.4",
     "next": "13.3.0",
     "next-auth": "^4.22.1",
     "next-connect": "^0.13.0",
     "postcss": "8.4.23",
     "prisma": "^4.13.0",
     "react": "18.2.0",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "18.2.0",
     "react-hook-form": "^7.43.9",
     "react-query": "^3.39.3",
+    "reactflow": "^11.7.0",
     "tailwindcss": "3.3.1",
     "typescript": "5.0.4",
     "winston": "^3.8.2",
     "yup": "^1.1.1"
   },
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0"
+    "@types/bcrypt": "^5.0.0",
+    "@types/react-beautiful-dnd": "^13.1.4"
   }
 }
