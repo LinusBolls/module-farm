@@ -6,17 +6,17 @@ export default function Page() {
         notion: {
           id: "notion",
           displayName: "Notion",
-          iconUrl: "https://cdn.example.com/icons/notion.svg",
+          iconUrl: "https://img.icons8.com/ios/512/notion.png",
         },
         slack: {
           id: "slack",
           displayName: "Slack",
-          iconUrl: "https://cdn.example.com/icons/slack.svg",
+          iconUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Slack_icon_2019.svg/2048px-Slack_icon_2019.svg.png",
         },
         openai: {
           id: "openai",
           displayName: "OpenAI",
-          iconUrl: "https://cdn.example.com/icons/openai.svg",
+          iconUrl: "https://static-00.iconduck.com/assets.00/openai-icon-505x512-pr6amibw.png",
         },
         defaultfolder: {
             id: "defaultfolder",

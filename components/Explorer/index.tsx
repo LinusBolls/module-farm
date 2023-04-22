@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, VStack, HStack, Icon, IconButton, Text } from "@chakra-ui/react";
 import { css } from "@emotion/react";
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import { useDrag } from "react-dnd";
 
 type ContainerType = "FOLDER" | "FILE"
 
@@ -43,9 +44,21 @@ const ExplorerItem: React.FC<{
         }
     };
 
+    const [{ isDragging }, dragRef] = useDrag(() => ({
+        type: 'item',
+        item: { id: item.id, name: item.displayName },
+        collect: (monitor) => ({
+          isDragging: monitor.isDragging(),
+        }),
+        canDrag: (monitor) => item.containerType === "FILE",
+      }));
+
     return (
-        <VStack align="start" spacing={0} style={{
-            width: "100%"
+        <VStack align="start" spacing={0} 
+        ref={dragRef}
+        style={{
+            width: "100%",
+            opacity: isDragging ? 0.5 : 1,
             // , paddingLeft: "4px", boxSizing:"border-box"
         }}>
             <HStack
@@ -57,7 +70,7 @@ const ExplorerItem: React.FC<{
                     gap: 0,
                     margin: 0,
                     width: "100%",
-                    paddingLeft: (depth * 4) + "px"
+                    paddingLeft: item.containerType === "FOLDER" ? (depth * 4) + "px" : (depth * 4) + 8 + "px"
                 }}
                 className={`hover:bg-gray-700 bg-gray-800 cursor-pointer`}
             // css={css cursor: pointer; padding-left: ${depth * 16}px; &:hover {background - color: #ececec; } }
@@ -76,7 +89,10 @@ const ExplorerItem: React.FC<{
                         }}
                     />
                 )}
-                {itemType.iconUrl && <Icon boxSize="1em" src={itemType.iconUrl} />}
+                {/* {itemType.iconUrl && <Icon boxSize="1em" src={itemType.iconUrl} />} */}
+                {itemType.iconUrl && <div style={{display: "flex", alignItems: "center", justifyContent: "center", width: "1rem", height: "1rem", overflow: "hidden"}}><img style={{ 
+                    // height: "1rem",
+                     }} src={itemType.iconUrl} /></div>}
                 <Text>{item.displayName}</Text>
             </HStack>
             {
@@ -101,9 +117,9 @@ const Explorer: React.FC<ExplorerProps> = ({
     topLevelItemIds,
 }) => {
     return (
-        <Box 
-        className="bg-gray-800"
-        style={{ width: "256px", height: "100%" }}>
+        <Box
+            className="bg-gray-800 border-r border-gray-700"
+            style={{ width: "256px", height: "100%" }}>
 
             {topLevelItemIds.map(i => {
 

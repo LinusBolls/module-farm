@@ -6,6 +6,8 @@ import { ChakraBaseProvider, ChakraProvider, extendBaseTheme } from '@chakra-ui/
 import chakraTheme from '@chakra-ui/theme'
 
 import '../overview.css';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 
 const { Button } = chakraTheme.components
 
@@ -19,6 +21,7 @@ const queryClient = new QueryClient();
 
 function App({ Component, pageProps }: AppProps) {
   return (
+    <DndProvider backend={HTML5Backend}>
     <ChakraProvider theme={theme}>
       <SessionProvider session={pageProps.session}>
         <QueryClientProvider client={queryClient}>
@@ -26,6 +29,7 @@ function App({ Component, pageProps }: AppProps) {
         </QueryClientProvider>
       </SessionProvider>
     </ChakraProvider>
+    </DndProvider>
   );
 }
 

@@ -1,5 +1,7 @@
-import React, { memo } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
+import { useEdges } from './components/NodeEditor/ApiNode/useEdges';
+import { useDrag } from 'react-dnd';
 
 const options = [
   {
@@ -20,124 +22,181 @@ const options = [
   },
 ];
 
-function Select({ value, handleId, nodeId }) {
-  const { setNodes } = useReactFlow();
-  const store = useStoreApi();
+function isParentOrSelf(potentialParent: HTMLElement, potentialChild: HTMLElement): boolean {
 
-  const onChange = (evt) => {
-    const { nodeInternals } = store.getState();
-    setNodes(
-      Array.from(nodeInternals.values()).map((node) => {
-        if (node.id === nodeId) {
-          node.data = {
-            ...node.data,
-            selects: {
-              ...node.data.selects,
-              [handleId]: evt.target.value,
-            },
-          };
-        }
+  if (potentialParent == potentialChild) return true
 
-        return node;
-      })
-    );
-  };
-
-  return (
-    <div className="custom-node__select">
-      {/* <div>Edge Type</div> */}
-      {/* <select className="nodrag" onChange={onChange} value={value}> */}
-      {/* {options.map((option) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))} */}
-      {/* </select> */}
-      <Handle type="source" position={Position.Right} id={handleId} />
-    </div>
-  );
+  let parent = potentialChild.parentElement;
+  while (parent !== null) {
+    if (parent === potentialParent) {
+      return true;
+    }
+    parent = parent.parentElement;
+  }
+  return false;
 }
 
+
 function CustomNode({ id, data }) {
+
+  const [isActive, setIsActive] = useState(false)
+
+  const {
+    edges,
+    addEdge,
+    removeEdge,
+
+    edgeConnectionMode,
+    startEdgeConnectionMode,
+    stopEdgeConnectionMode,
+  } = useEdges()
+
+  const targetEdge = edges.filter(i => i.target === id)[0]
+  const sourceEdge = edges.filter(i => i.source === id)[0]
+
   return (
-    <>
-      {/* <div className="custom-node__header">
-        This is a <strong>custom node</strong>
-        <div>
-          <label htmlFor="username" className="block text-sm font-medium text-gray-500">
-            Username
-          </label>
-          <div className="mt-1">
-            <input
-              type="text"
-              className={`px-3 h-10 text-gray-900 shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md`} />
-          </div>
-          
-        </div>
-      </div>
-      <div className="custom-node__body">
-        {Object.keys(data.selects).map((handleId) => (
-          <Select key={handleId} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
-        ))}
-      </div> */}
+    <div
+      tabIndex={1}
+      onFocus={() => setIsActive(true)}
+      onBlur={e => {
+        if (!e.currentTarget.contains(e.relatedTarget)) setIsActive(false)
+      }}
+      className="flex flex-row"
+      style={{
 
+        borderRadius: "8px",
 
-      <div className="flex flex-row"
+        height: "7rem",
+        width: "22rem",
+
+        gap: "1rem",
+
+        outline: isActive ? "4px solid #3856C5" : "none",
+        outlineOffset: "8px",
+      }}>
+      {(isActive || edgeConnectionMode.isActive) && <button
+        onFocus={() => {
+          if (sourceEdge) {
+            removeEdge(sourceEdge.id)
+          }
+          else {
+            startEdgeConnectionMode()
+          }
+        }}
+        onBlur={() => edgeConnectionMode.isActive && stopEdgeConnectionMode()}
         style={{
 
-          height: "7rem",
-          width: "22rem",
+          position: "absolute",
+          zIndex: 999,
 
-          gap: "1rem",
-        }}>
-        <div style={{
+          left: "2.5rem",
+          // bottom: "-24px",
+
+          bottom: "-16px",
+
+          boxShadow: "0 0 16px 0 rgba(0, 0, 0, 0.3)",
+          // transformY: "-50",
+
+          backgroundColor: isActive ? "#3856C5" : "#999",
+          color: "white",
+
+          width: "2rem",
+          height: "2rem",
+
+          borderRadius: "999px",
+
           display: "flex",
           alignItems: "center",
-          justifyContent:"center",
+          justifyContent: "center",
+        }}>{sourceEdge != null ? "-" : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 11.9994C24 12.5071 23.5846 12.9225 23.0769 12.9225H12.9231V23.0763C12.9231 23.5866 12.5102 24 12 24C11.4898 24 11.0769 23.584 11.0769 23.0763V12.9225H0.923077C0.412846 12.9225 0 12.51 0 12C0 11.4917 0.413077 11.0763 0.923077 11.0763H11.0769V0.9225C11.0769 0.412269 11.4898 0 12 0C12.5102 0 12.9231 0.4125 12.9231 0.9225V11.0763H23.0769C23.5846 11.0763 24 11.4917 24 11.9994Z" fill="white" />
+        </svg>}
+      </button>}
+      {(isActive || edgeConnectionMode.isActive) && <button
+        onFocus={() => {
+          if (targetEdge) {
+            removeEdge(targetEdge.id)
+          }
+          else {
+            startEdgeConnectionMode()
+          }
+        }}
+        onBlur={() => edgeConnectionMode.isActive && stopEdgeConnectionMode()}
+        style={{
 
-          position: "relative",
+          position: "absolute",
+          zIndex: 999,
 
-          minWidth: "7rem",
-          minHeight: "7rem",
-          width: "7rem",
-          height: "7rem",
+          left: "2.5rem",
+          // bottom: "-24px",
 
-          borderRadius: "8px",
+          top: "-16px",
 
-          backgroundColor: "white",
-        }}>
-          <Handle type="target" position={Position.Top} id={Object.keys(data.selects)[0]} style={{
-            // position: "absolute",
-            // top: 0,
-          }} />
-          <img 
+          boxShadow: "0 0 16px 0 rgba(0, 0, 0, 0.3)",
+          // transformY: "-50",
+
+          backgroundColor: isActive ? "#3856C5" : "#999",
+          color: "white",
+
+          width: "2rem",
+          height: "2rem",
+
+          borderRadius: "999px",
+
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}>{targetEdge != null ? "-" : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24 11.9994C24 12.5071 23.5846 12.9225 23.0769 12.9225H12.9231V23.0763C12.9231 23.5866 12.5102 24 12 24C11.4898 24 11.0769 23.584 11.0769 23.0763V12.9225H0.923077C0.412846 12.9225 0 12.51 0 12C0 11.4917 0.413077 11.0763 0.923077 11.0763H11.0769V0.9225C11.0769 0.412269 11.4898 0 12 0C12.5102 0 12.9231 0.4125 12.9231 0.9225V11.0763H23.0769C23.5846 11.0763 24 11.4917 24 11.9994Z" fill="white" />
+        </svg>}
+      </button>}
+      <div style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+
+        position: "relative",
+
+        minWidth: "7rem",
+        minHeight: "7rem",
+        width: "7rem",
+        height: "7rem",
+
+        borderRadius: "8px",
+
+        backgroundColor: "white",
+      }}>
+        <Handle type="target" position={Position.Top} id={Object.keys(data.selects)[0]} style={{
+          // position: "absolute",
+          // top: 0,
+        }} />
+        <img
           style={{
             width: "62.5%"
           }}
           src="data:image/png;base64,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" />
-          <Handle type="source" position={Position.Bottom} id={Object.keys(data.selects)[1]} style={{
-            // position: "absolute",
-            // bottom: 0,
-          }} />
-        </div>
-        <div className="flex flex-col justify-center">
-          <h2 style={{
-            fontWeight: "bold",
-            color: "#999"
-          }}>GPT-4</h2>
-          <p style={{
-            fontWeight: "bold",
-            color: "white",
-          }}>
-            Analyze the current Kanban Board and make suggestions on what to discuss in the meeting
-          </p>
-          {/* {Object.keys(data.selects).map((handleId) => (
+        <Handle type="source" position={Position.Bottom} id={Object.keys(data.selects)[1]} style={{
+          // position: "absolute",
+          // bottom: 0,
+        }} />
+      </div>
+      <div className="flex flex-col justify-center">
+        <h2 style={{
+          fontWeight: "bold",
+          color: isActive ? "#3856C5" : "#999"
+        }}>{data.taskInfo.title}</h2>
+        <p style={{
+          fontWeight: "bold",
+          color: "white",
+        }}>
+          {data.taskInfo.description}
+        </p>
+        {/* {Object.keys(data.selects).map((handleId) => (
           <Select key={handleId} nodeId={id} value={data.selects[handleId]} handleId={handleId} />
         ))} */}
 
-        </div>
       </div>
-    </>
+    </div>
   );
 }
 
