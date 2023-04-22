@@ -1,7 +1,8 @@
-import React, { memo, useRef, useState } from 'react';
-import { Handle, useReactFlow, useStoreApi, Position } from 'reactflow';
+import React, { memo, useState } from 'react';
+import { Handle, Position } from 'reactflow';
 import { useEdges } from './components/NodeEditor/ApiNode/useEdges';
-import { useDrag } from 'react-dnd';
+
+import styles from "./stepNode.module.css"
 
 const options = [
   {
@@ -39,6 +40,9 @@ function isParentOrSelf(potentialParent: HTMLElement, potentialChild: HTMLElemen
 
 function CustomNode({ id, data }) {
 
+  const focusedColor = "#3856C5"
+  const unfocusedColor = "#999"
+
   const [isActive, setIsActive] = useState(false)
 
   const {
@@ -71,10 +75,24 @@ function CustomNode({ id, data }) {
 
         gap: "1rem",
 
-        outline: isActive ? "4px solid #3856C5" : "none",
+        outline: isActive ? `4px solid ${focusedColor}` : "none",
         outlineOffset: "8px",
       }}>
-      {(isActive || edgeConnectionMode.isActive) && <button
+      {(isActive || edgeConnectionMode.isActive) && <button className={styles.mountPoint + " " + (isActive ? styles.focused : styles.unfocused)} style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "5rem",
+        height: "5rem",
+
+        position: "absolute",
+        zIndex: 999,
+
+        left: "1rem",
+        bottom: "-2.25rem",
+
+        borderRadius: 999,
+      }}
         onFocus={() => {
           if (sourceEdge) {
             removeEdge(sourceEdge.id)
@@ -84,35 +102,43 @@ function CustomNode({ id, data }) {
           }
         }}
         onBlur={() => edgeConnectionMode.isActive && stopEdgeConnectionMode()}
-        style={{
+      >
+        <div
+          style={{
 
-          position: "absolute",
-          zIndex: 999,
+            boxShadow: "0 0 16px 0 rgba(0, 0, 0, 0.3)",
 
-          left: "2.5rem",
-          // bottom: "-24px",
+            backgroundColor: isActive ? focusedColor : unfocusedColor,
+            color: "white",
 
-          bottom: "-16px",
+            width: "2rem",
+            height: "2rem",
 
-          boxShadow: "0 0 16px 0 rgba(0, 0, 0, 0.3)",
-          // transformY: "-50",
+            borderRadius: "999px",
 
-          backgroundColor: isActive ? "#3856C5" : "#999",
-          color: "white",
-
-          width: "2rem",
-          height: "2rem",
-
-          borderRadius: "999px",
-
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}>{sourceEdge != null ? "-" : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24 11.9994C24 12.5071 23.5846 12.9225 23.0769 12.9225H12.9231V23.0763C12.9231 23.5866 12.5102 24 12 24C11.4898 24 11.0769 23.584 11.0769 23.0763V12.9225H0.923077C0.412846 12.9225 0 12.51 0 12C0 11.4917 0.413077 11.0763 0.923077 11.0763H11.0769V0.9225C11.0769 0.412269 11.4898 0 12 0C12.5102 0 12.9231 0.4125 12.9231 0.9225V11.0763H23.0769C23.5846 11.0763 24 11.4917 24 11.9994Z" fill="white" />
-        </svg>}
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>{sourceEdge != null ? "-" : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 11.9994C24 12.5071 23.5846 12.9225 23.0769 12.9225H12.9231V23.0763C12.9231 23.5866 12.5102 24 12 24C11.4898 24 11.0769 23.584 11.0769 23.0763V12.9225H0.923077C0.412846 12.9225 0 12.51 0 12C0 11.4917 0.413077 11.0763 0.923077 11.0763H11.0769V0.9225C11.0769 0.412269 11.4898 0 12 0C12.5102 0 12.9231 0.4125 12.9231 0.9225V11.0763H23.0769C23.5846 11.0763 24 11.4917 24 11.9994Z" fill="white" />
+          </svg>}
+        </div>
       </button>}
-      {(isActive || edgeConnectionMode.isActive) && <button
+      {(isActive || edgeConnectionMode.isActive) && <button className={styles.mountPoint + " " + (isActive ? styles.focused : styles.unfocused)} style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: "5rem",
+        height: "5rem",
+
+        position: "absolute",
+        zIndex: 999,
+
+        left: "1rem",
+        top: "-2.25rem",
+
+        borderRadius: 999,
+      }}
         onFocus={() => {
           if (targetEdge) {
             removeEdge(targetEdge.id)
@@ -122,33 +148,27 @@ function CustomNode({ id, data }) {
           }
         }}
         onBlur={() => edgeConnectionMode.isActive && stopEdgeConnectionMode()}
-        style={{
+      >
+        <div
+          style={{
 
-          position: "absolute",
-          zIndex: 999,
+            boxShadow: "0 0 16px 0 rgba(0, 0, 0, 0.3)",
 
-          left: "2.5rem",
-          // bottom: "-24px",
+            backgroundColor: isActive ? focusedColor : unfocusedColor,
+            color: "white",
 
-          top: "-16px",
+            width: "2rem",
+            height: "2rem",
 
-          boxShadow: "0 0 16px 0 rgba(0, 0, 0, 0.3)",
-          // transformY: "-50",
+            borderRadius: "999px",
 
-          backgroundColor: isActive ? "#3856C5" : "#999",
-          color: "white",
-
-          width: "2rem",
-          height: "2rem",
-
-          borderRadius: "999px",
-
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}>{targetEdge != null ? "-" : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M24 11.9994C24 12.5071 23.5846 12.9225 23.0769 12.9225H12.9231V23.0763C12.9231 23.5866 12.5102 24 12 24C11.4898 24 11.0769 23.584 11.0769 23.0763V12.9225H0.923077C0.412846 12.9225 0 12.51 0 12C0 11.4917 0.413077 11.0763 0.923077 11.0763H11.0769V0.9225C11.0769 0.412269 11.4898 0 12 0C12.5102 0 12.9231 0.4125 12.9231 0.9225V11.0763H23.0769C23.5846 11.0763 24 11.4917 24 11.9994Z" fill="white" />
-        </svg>}
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}>{targetEdge != null ? "-" : <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M24 11.9994C24 12.5071 23.5846 12.9225 23.0769 12.9225H12.9231V23.0763C12.9231 23.5866 12.5102 24 12 24C11.4898 24 11.0769 23.584 11.0769 23.0763V12.9225H0.923077C0.412846 12.9225 0 12.51 0 12C0 11.4917 0.413077 11.0763 0.923077 11.0763H11.0769V0.9225C11.0769 0.412269 11.4898 0 12 0C12.5102 0 12.9231 0.4125 12.9231 0.9225V11.0763H23.0769C23.5846 11.0763 24 11.4917 24 11.9994Z" fill="white" />
+          </svg>}
+        </div>
       </button>}
       <div style={{
         display: "flex",
@@ -183,7 +203,7 @@ function CustomNode({ id, data }) {
       <div className="flex flex-col justify-center">
         <h2 style={{
           fontWeight: "bold",
-          color: isActive ? "#3856C5" : "#999"
+          color: isActive ? focusedColor : unfocusedColor
         }}>{data.taskInfo.title}</h2>
         <p style={{
           fontWeight: "bold",

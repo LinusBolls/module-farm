@@ -1,0 +1,16 @@
+.mountPoint.focused:hover {
+
+    background: rgba(56, 86, 197, 0.3);
+}
+.mountPoint.unfocused:hover {
+
+    background: rgba(153, 153, 153, 0.3);
+}
+.mountPoint {
+
+    transition-duration: 0.1s;
+}
+.mountPoint:hover {
+
+    transform: scale(1.8);
+}

@@ -29,4 +29,6 @@ while there are already some online solutions to share minecraft buildings, this
 
 4. **EXCEPTION TO HOT RELOAD:** if you make changes to `/prisma/schema.prisma`, you will need to run `$ npm run build-prisma`. keep in mind that changing between commits or branches may also affect `/prisma/schema.prisma`!
 
-5. after you're done developing, simply run `$ npm run stop-dev` to stop the development docker container.
+5. **EXCEPTION TO HOT RELOAD:** after installing new dependencies, you will need to run `$ npm run restart-dev`. keep in mind that changing between commits or branches may also affect your dependencies!
+
+6. after you're done developing, simply run `$ npm run stop-dev` to stop the development docker container.
