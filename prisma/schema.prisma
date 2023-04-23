@@ -7,42 +7,25 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// accounts and sessions
+
 model User {
-  id               String            @id @default(auto()) @map("_id") @db.ObjectId
-  email            String            @unique
-  username         String            @unique
-  password         String
-  avatarUrl        String?
-  builds           Build[]
-  minecraftAccount MinecraftAccount?
-  createdAt        DateTime          @default(now())
-  updatedAt        DateTime          @default(now()) @updatedAt
-  Account          Account[]
-  Session          Session[]
-}
-
-model MinecraftAccount {
-  id       String @id @default(auto()) @map("_id") @db.ObjectId
-  mojangId String
-  username String
-  user     User   @relation(fields: [userId], references: [id])
-  userId   String @unique @db.ObjectId // relation scalar field (used in the `@relation` attribute above)
-}
-
-model Build {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String
-  category    String
-  images      String[]
-  user        User     @relation(fields: [userId], references: [id])
-  userId      String   @db.ObjectId
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @default(now()) @updatedAt
+  id                  String               @id @default(auto()) @map("_id") @db.ObjectId
+  email               String               @unique
+  username            String               @unique
+  password            String
+  avatarUrl           String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @default(now()) @updatedAt
+  Account             Account[]
+  Session             Session[]
+  ownedOrganizations  Organization[]       @relation("ownedBy")
+  memberOrganizations OrganizationMember[]
+  Workflow            Workflow[]
 }
 
 model Account {
-  id                 String    @id @default(cuid()) @map("_id") @db.ObjectId
+  id                 String    @id @default(auto()) @map("_id") @db.ObjectId
   userId             String
   providerType       String
   providerId         String
@@ -58,7 +41,7 @@ model Account {
 }
 
 model Session {
-  id           String   @id @default(cuid()) @map("_id") @db.ObjectId
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
   userId       String
   expires      DateTime
   sessionToken String   @unique
@@ -69,7 +52,7 @@ model Session {
 }
 
 model VerificationRequest {
-  id         String   @id @default(cuid()) @map("_id") @db.ObjectId
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
   identifier String
   token      String   @unique
   expires    DateTime
@@ -77,4 +60,100 @@ model VerificationRequest {
   updatedAt  DateTime @updatedAt
 
   @@unique([identifier, token])
+}
+
+// organizations
+
+model OrganizationPermission {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  displayName          String
+  OrganizationMember   OrganizationMember? @relation(fields: [organizationMemberId], references: [id])
+  organizationMemberId String?             @db.ObjectId
+}
+
+model OrganizationMember {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+
+  user   User   @relation(fields: [userId], references: [id])
+  userId String @db.ObjectId
+
+  permissions OrganizationPermission[]
+
+  @@unique([organizationId, userId])
+}
+
+model Organization {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  displayName String
+
+  owner   User   @relation("ownedBy", fields: [ownerId], references: [id])
+  ownerId String @db.ObjectId
+
+  members OrganizationMember[]
+
+  iconUrl String?
+}
+
+// workflows
+
+model WorkflowPermission {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  displayName String
+}
+
+model Workflow {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  emoji       String
+  displayName String
+  description String
+
+  nodes WorkflowNode[]
+
+  owner   User   @relation(fields: [ownerId], references: [id])
+  ownerId String @db.ObjectId
+}
+
+model WorkflowNode {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  workflow   Workflow @relation(fields: [workflowId], references: [id])
+  workflowId String
+
+  block   WorkflowBlock @relation(fields: [blockId], references: [id])
+  blockId String
+
+  posX Int
+  posY Int
+}
+
+model WorkflowBlock {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  service   ExternalService @relation(fields: [serviceId], references: [id])
+  serviceId String          @db.ObjectId
+
+  iconUrl     String?
+  displayName String
+  description String
+
+  nodes WorkflowNode[]
+}
+
+model ExternalService {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  displayName String
+
+  url String
+
+  iconUrl String
+
+  blocks WorkflowBlock[]
 }

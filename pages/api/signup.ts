@@ -11,6 +11,7 @@ handler.post(async (req, res) => {
   if (!username || !email || !password) {
     return res.status(400).json({ success: false, message: 'Please provide all required fields.' })
   }
+  const organizationName = username
 
   try {
     const user = await prisma.user.create({
@@ -18,12 +19,28 @@ handler.post(async (req, res) => {
         email,
         username,
         password: await bcrypt.hash(password, 10),
+        ownedOrganizations: {
+          create: {
+            displayName: organizationName,
+            members: {
+              create: {
+                user: { connect: { email } }
+              }
+            }
+          }
+        }
       },
+      include: {
+        ownedOrganizations: {
+          include: {
+            members: true
+          }
+        }
+      }
     })
     res.status(200).json({ success: true, data: user })
   } catch (error) {
     res.status(400).json({ success: false, error: error.message })
   }
 })
-
 export default handler

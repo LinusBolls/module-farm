@@ -20,6 +20,8 @@ import { randomUUID } from 'crypto';
 import { useState } from 'react';
 import { useRef } from 'react';
 import { useEffect } from 'react';
+import axios from 'axios';
+import { useQuery } from 'react-query';
 
 const nodeTypes = {
     custom: CustomNode,
@@ -29,9 +31,14 @@ const minimapStyle = {
     height: 120,
 };
 
-
-
 const OverviewFlow = () => {
+
+    const { data, isLoading, error } = useQuery(['user-me'], async () => {
+        const res = await axios.get("/api/me")
+
+        return res.data.data
+    });
+    
 
     const [fuß, setFuß] = useState<any>(null)
 
@@ -214,48 +221,65 @@ const OverviewFlow = () => {
 
     const reactFlowRef = useRef<any>(null)
 
+    if (isLoading) return "loading..."
+
 
     return (
-
-        <div className="bg-gray-900" style={{ height: "100vh", display: "flex" }}
-        // onMouseMove={e => {
-
-        //     const bounds = reactFlowRef.current.getBoundingClientRect();
-
-        //     const position = fuß.project({
-        //         x: e.clientX - bounds.left,
-        //         y: e.clientY - bounds.top
-        //     });
-
-        //     setMousePosRelativeToPane(position)
-        // }}
-        >
-
-            <Explorer items={items} itemTypes={itemTypes} topLevelItemIds={["1", "2", "3", "4"]} />
-            <div ref={drop} style={{ width: "100%", height: "100%" }}>
-                <EdgesContext.Provider value={edgesValue}>
-
-                    <ReactFlow
-                        nodes={nodes}
-                        edges={edgesWithUpdatedTypes}
-                        onNodesChange={onNodesChange}
-                        onEdgesChange={onEdgesChange}
-                        onConnect={onConnect}
-                        onInit={onInit}
-                        fitView
-                        attributionPosition="top-right"
-                        nodeTypes={nodeTypes}
-                        proOptions={{ hideAttribution: true }}
-                        ref={reactFlowRef}
-                    >
-                        <MiniMap style={minimapStyle} zoomable pannable />
-                        <Controls />
-                        <Background color="#aaa" gap={16} />
-                    </ReactFlow>
-
-                </EdgesContext.Provider>
+        <>
+            <div className="bg-gray-800 border-b border-gray-700 h-20">
+                <div className="border-r border-gray-700" style={{
+                    width: "256px",
+                    height: "100%",
+                    display: "flex",
+                    alignItems:"center",
+                    paddingLeft: "2rem",
+                    paddingRight: "2rem",
+                }}>{
+                    
+                    <h2 style={{fontWeight: "bold", color: "white"}}>{data.organizations[0].displayName}</h2>
+                }</div>
             </div>
-        </div>
+
+            <div className="bg-gray-900" style={{ height: "100vh", display: "flex" }}
+            // onMouseMove={e => {
+
+            //     const bounds = reactFlowRef.current.getBoundingClientRect();
+
+            //     const position = fuß.project({
+            //         x: e.clientX - bounds.left,
+            //         y: e.clientY - bounds.top
+            //     });
+
+            //     setMousePosRelativeToPane(position)
+            // }}
+            >
+
+                <Explorer items={items} itemTypes={itemTypes} topLevelItemIds={["1", "2", "3", "4"]} />
+                <div ref={drop} style={{ width: "100%", height: "100%" }}>
+                    <EdgesContext.Provider value={edgesValue}>
+
+                        <ReactFlow
+                            nodes={nodes}
+                            edges={edgesWithUpdatedTypes}
+                            onNodesChange={onNodesChange}
+                            onEdgesChange={onEdgesChange}
+                            onConnect={onConnect}
+                            onInit={onInit}
+                            fitView
+                            attributionPosition="top-right"
+                            nodeTypes={nodeTypes}
+                            proOptions={{ hideAttribution: true }}
+                            ref={reactFlowRef}
+                        >
+                            <MiniMap style={minimapStyle} zoomable pannable />
+                            <Controls />
+                            <Background color="#aaa" gap={16} />
+                        </ReactFlow>
+
+                    </EdgesContext.Provider>
+                </div>
+            </div>
+        </>
     );
 };
 
