@@ -65,7 +65,7 @@ function CustomNode({ id, data }) {
       onBlur={e => {
         if (!e.currentTarget.contains(e.relatedTarget)) setIsActive(false)
       }}
-      className="flex flex-row"
+      className={"flex flex-row" + " " + styles["spawn-with-plop"]}
       style={{
 
         borderRadius: "8px",
