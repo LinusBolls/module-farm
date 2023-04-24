@@ -5,12 +5,16 @@
   "scripts": {
     "start-dev": "sh scripts/startDockerCompose.sh",
     "stop-dev": "docker compose stop",
-    "restart-dev": "npm run stop-dev && npm run start-dev",
+    "clear-database": "npm run stop-dev && npm run start-dev",
+    "restart-dev": "docker compose up -d --build",
     "build-prisma": "prisma generate && docker compose up -d --build && docker exec modulefarm npx prisma db push",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
+  },
+  "prisma": {
+    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.0.18",
@@ -27,9 +31,16 @@
     "autoprefixer": "10.4.14",
     "axios": "^1.3.6",
     "bcrypt": "^5.1.0",
+    "classnames": "^2.3.2",
+    "cors": "^2.8.5",
+    "dayjs": "^1.11.7",
+    "dotenv": "^16.0.3",
     "eslint": "8.38.0",
     "eslint-config-next": "13.3.0",
+    "express": "^4.18.2",
     "framer-motion": "^10.12.4",
+    "html2canvas": "^1.4.1",
+    "multer": "^1.4.5-lts.1",
     "next": "13.3.0",
     "next-auth": "^4.22.1",
     "next-connect": "^0.13.0",
@@ -43,7 +54,10 @@
     "react-hook-form": "^7.43.9",
     "react-query": "^3.39.3",
     "reactflow": "^11.7.0",
+    "socket.io": "^4.6.1",
+    "socket.io-client": "^4.6.1",
     "tailwindcss": "3.3.1",
+    "ts-node": "^10.9.1",
     "typescript": "5.0.4",
     "uuid": "^9.0.0",
     "winston": "^3.8.2",
@@ -51,6 +65,8 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
-    "@types/react-beautiful-dnd": "^13.1.4"
+    "@types/express": "^4.17.17",
+    "@types/react-beautiful-dnd": "^13.1.4",
+    "@types/uuid": "^9.0.1"
   }
 }

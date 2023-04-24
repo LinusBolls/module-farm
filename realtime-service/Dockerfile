@@ -2,12 +2,12 @@ FROM node:16
 
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY ../package*.json ./
 
 RUN npm install
 
-COPY ../ .
+COPY . .
 
 RUN npx prisma generate
 
-EXPOSE 3000
+EXPOSE 6000

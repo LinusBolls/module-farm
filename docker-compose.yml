@@ -50,4 +50,18 @@ services:
       - /usr/src/app/.next
     ports:
       - 3000:3000
-    command:  npm run dev
+    command: npm run dev
+
+  realtime-service:
+    container_name: realtime-service
+    build: 
+      context: .
+      dockerfile: realtime-service/Dockerfile
+    restart: always
+    volumes:
+      - ./:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
+    ports:
+      - 5050:6000
+    command: npx ts-node --compiler-options {\"module\":\"CommonJS\"} realtime-service/index.ts
