@@ -3,6 +3,9 @@ import { Box, VStack, HStack, Icon, IconButton, Text } from "@chakra-ui/react";
 import { css } from "@emotion/react";
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useDrag } from "react-dnd";
+import { useQuery } from "react-query";
+import axios from "axios";
+import CustomNode from "@/CustomNode";
 
 type ContainerType = "FOLDER" | "FILE"
 
@@ -44,70 +47,93 @@ const ExplorerItem: React.FC<{
         }
     };
 
-    const [{ isDragging }, dragRef] = useDrag(() => ({
+    const [{ isDragging }, dragRef, preview] = useDrag(() => ({
         type: 'item',
         item: { id: item.id, name: item.displayName },
         collect: (monitor) => ({
-          isDragging: monitor.isDragging(),
+            isDragging: monitor.isDragging(),
         }),
         canDrag: (monitor) => item.containerType === "FILE",
-      }));
+    }));
 
     return (
-        <VStack align="start" spacing={0} 
-        ref={dragRef}
-        style={{
-            width: "100%",
-            opacity: isDragging ? 0.5 : 1,
-            // , paddingLeft: "4px", boxSizing:"border-box"
-        }}>
-            <HStack
-                onClick={handleClick}
+        <>
+            {/* {preview(<div className="bg-gray-100 h-28 w-28 rounded-lg bg-gray-100 scale-50"
+            // style={{transform: "translateX(-50%)"}} 
+            ></div>)} */}
+            <VStack
+                align="start"
+                spacing={0}
+                ref={dragRef}
                 style={{
-                    // backgroundColor: "#222",
-                    height: "32px",
-                    color: "white",
-                    gap: 0,
-                    margin: 0,
                     width: "100%",
-                    paddingLeft: item.containerType === "FOLDER" ? (depth * 4) + "px" : (depth * 4) + 8 + "px"
-                }}
-                className={`hover:bg-gray-700 bg-gray-800 cursor-pointer`}
-            // css={css cursor: pointer; padding-left: ${depth * 16}px; &:hover {background - color: #ececec; } }
-            >
-                {item.containerType === "FOLDER" && (
-                    <IconButton
-                        aria-label="Toggle folder"
-                        icon={
-                            isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />
-                        }
-                        variant="ghost"
-                        size="xs"
-                        onClick={handleClick}
-                        style={{
-                            background: "none",
-                        }}
-                    />
-                )}
-                {/* {itemType.iconUrl && <Icon boxSize="1em" src={itemType.iconUrl} />} */}
-                {itemType.iconUrl && <div style={{display: "flex", alignItems: "center", justifyContent: "center", width: "1rem", height: "1rem", overflow: "hidden"}}><img style={{ 
-                    // height: "1rem",
-                     }} src={itemType.iconUrl} /></div>}
-                <Text>{item.displayName}</Text>
-            </HStack>
-            {
-                isExpanded &&
-                item.childrenIds.map((childId) => (
-                    <ExplorerItem
-                        key={childId}
-                        item={items[childId]}
-                        itemTypes={itemTypes}
-                        items={items}
-                        depth={depth + 1}
-                    />
-                ))
-            }
-        </VStack >
+                    opacity: isDragging ? 0.5 : 1,
+                    // , paddingLeft: "4px", boxSizing:"border-box"
+                }}>
+                <HStack
+                    onClick={handleClick}
+                    style={{
+                        // backgroundColor: "#222",
+                        boxSizing: "border-box",
+                        height: "32px",
+                        color: "white",
+                        gap: 0,
+                        margin: 0,
+                        width: "100%",
+                        paddingLeft: 0, // item.containerType === "FOLDER" ? (depth * 4) + "px" : (depth * 4) + 8 + "px"
+                        paddingRight: "16px",
+                    }}
+                    className={`hover:bg-gray-700 cursor-pointer`}
+                // css={css cursor: pointer; padding-left: ${depth * 16}px; &:hover {background - color: #ececec; } }
+                >
+                    {Array.from({ length: depth }).map(_ => {
+
+                        return <div className="w-2 h-full border-gray-700 border-r shrink-0" />
+                    })}
+                    {item.containerType === "FOLDER" && (
+                        <IconButton
+                            aria-label="Toggle folder"
+                            icon={
+                                isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />
+                            }
+                            variant="ghost"
+                            size="xs"
+                            onClick={handleClick}
+                            style={{
+                                background: "none",
+                                marginLeft: "4px",
+                            }}
+                        />
+                    )}
+                    {/* {itemType.iconUrl && <Icon boxSize="1em" src={itemType.iconUrl} />} */}
+                    {itemType.iconUrl && <div style={{ display: "flex", alignItems: "center", justifyContent: "center", width: "1.5rem", height: "1.5rem", flexShrink: 0, overflow: "hidden", marginLeft: "4px", }}>
+                        <img style={{
+                            height: "1rem",
+                        }} src={itemType.iconUrl} /></div>}
+                    <Text style={{
+                        overflow: "hidden",
+                        whiteSpace: "nowrap",
+                        textOverflow: "ellipsis",
+                    }}>{item.displayName}</Text>
+                </HStack>
+                {/* <VStack align="start" spacing={0} className="w-full pl-1 ">
+                    <VStack align="start" spacing={0} className="w-full border-gray-700 border-l-2"> */}
+                {
+                    isExpanded &&
+                    item.childrenIds.map((childId) => (
+                        <ExplorerItem
+                            key={childId}
+                            item={items[childId]}
+                            itemTypes={itemTypes}
+                            items={items}
+                            depth={depth + 1}
+                        />
+                    ))
+                }
+                {/* </VStack>
+                </VStack> */}
+            </VStack >
+        </>
     );
 };
 
@@ -117,9 +143,7 @@ const Explorer: React.FC<ExplorerProps> = ({
     topLevelItemIds,
 }) => {
     return (
-        <Box
-            className="bg-gray-800 border-r border-gray-700"
-            style={{ width: "256px", height: "100%" }}>
+        <Box className="w-full h-full ">
 
             {topLevelItemIds.map(i => {
 
