@@ -26,8 +26,8 @@ const LoginPage: React.FC = () => {
   const onSubmit = async (data: SignInFormData) => {
     const result = await signIn("credentials", {
       ...data,
-      callbackUrl: "/",
-      redirect: false,
+      callbackUrl: "/dashboard",
+      redirect: true,
     });
 
     if (!result?.ok) {
