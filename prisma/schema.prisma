@@ -22,6 +22,7 @@ model User {
   ownedOrganizations  Organization[]       @relation("ownedBy")
   memberOrganizations OrganizationMember[]
   Workflow            Workflow[]
+  WorkflowAction      WorkflowAction[]
 }
 
 model Account {
@@ -66,6 +67,8 @@ model VerificationRequest {
 
 model OrganizationPermission {
   id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  key String @unique
 
   displayName          String
   OrganizationMember   OrganizationMember? @relation(fields: [organizationMemberId], references: [id])
@@ -118,6 +121,8 @@ model Workflow {
 
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String @db.ObjectId
+
+  actions WorkflowAction[]
 }
 
 model WorkflowNode {
@@ -156,4 +161,26 @@ model ExternalService {
   iconUrl String
 
   blocks WorkflowBlock[]
+}
+
+model WorkflowAction {
+  id         String     @id @default(auto()) @map("_id") @db.ObjectId
+  actionType ActionType
+  causedBy   User       @relation(fields: [causedById], references: [id])
+  causedById String     @db.ObjectId
+  createdAt  DateTime   @default(now())
+  detail     Json
+
+  workflow   Workflow @relation(fields: [workflowId], references: [id])
+  workflowId String   @db.ObjectId
+
+  @@index([actionType])
+}
+
+enum ActionType {
+  CREATE_NODE
+  MOVE_NODE
+  DELETE_NODE
+  CREATE_EDGE
+  DELETE_EDGE
 }
