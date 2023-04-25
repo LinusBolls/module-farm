@@ -25,10 +25,13 @@ export async function middleware(
       return NextResponse.redirect(new URL('/', req.url))
     }
     return NextResponse.next();
-  }
-  if (["/api", "/_next/static", "/favicon.ico"].some(slug => req.nextUrl.pathname.startsWith(slug))) return NextResponse.next();
 
-  if (token == null) return NextResponse.redirect(new URL('/signin', req.url))
+  }
+  console.log(req.nextUrl.pathname)
+
+  // if (["/api", "/_next/static", "/favicon.ico", "/abstractBackground.svg"].some(slug => req.nextUrl.pathname.startsWith(slug))) return NextResponse.next();
+
+  if (token == null && ["/", "/settings"].includes(req.nextUrl.pathname) || req.nextUrl.pathname.startsWith("/organizations")) return NextResponse.redirect(new URL('/signin', req.url))
 
   // the code below is used to pass the nextjs session cookies on to
   // the realtime service for authorization
