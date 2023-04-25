@@ -86,18 +86,21 @@ const options = {
     error: "/auth/error",
   },
   session: { strategy: "jwt" },
-  secret: "akjwher",
+  secret: process.env.SECRET,
   callbacks: {
+    // @ts-ignore
     async signIn({ user, account, profile, email, credentials }) {
       console.log("signIn")
 
       return true;
     },
+    // @ts-ignore
     async redirect({ url, baseUrl }) {
       console.log("redirect")
 
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
+    // @ts-ignore
     async jwt({ token, account }) {
       console.log("jwt")
 
@@ -106,6 +109,7 @@ const options = {
       }
       return token;
     },
+    // @ts-ignore
     async session({ session }) {
 
       session.userId = session.user.id;

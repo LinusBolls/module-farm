@@ -86,9 +86,9 @@ const ExplorerItem: React.FC<{
                     className={`hover:bg-gray-700 cursor-pointer`}
                 // css={css cursor: pointer; padding-left: ${depth * 16}px; &:hover {background - color: #ececec; } }
                 >
-                    {Array.from({ length: depth }).map(_ => {
+                    {Array.from({ length: depth }).map((_, idx) => {
 
-                        return <div className="w-2 h-full border-gray-700 border-r shrink-0" />
+                        return <div key={idx} className="w-2 h-full border-gray-700 border-r shrink-0" />
                     })}
                     {item.containerType === "FOLDER" && (
                         <IconButton
@@ -145,10 +145,11 @@ const Explorer: React.FC<ExplorerProps> = ({
     return (
         <Box className="w-full h-full ">
 
-            {topLevelItemIds.map(i => {
+            {topLevelItemIds.map(id => {
 
                 return <ExplorerItem
-                    item={items[i]}
+                    key={id}
+                    item={items[id]}
                     itemTypes={itemTypes}
                     items={items}
                     depth={0}

@@ -10,19 +10,20 @@ generator client {
 // accounts and sessions
 
 model User {
-  id                  String               @id @default(auto()) @map("_id") @db.ObjectId
-  email               String               @unique
-  username            String               @unique
-  password            String
-  avatarUrl           String?
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @default(now()) @updatedAt
-  Account             Account[]
-  Session             Session[]
-  ownedOrganizations  Organization[]       @relation("ownedBy")
-  memberOrganizations OrganizationMember[]
-  Workflow            Workflow[]
-  WorkflowAction      WorkflowAction[]
+  id                   String               @id @default(auto()) @map("_id") @db.ObjectId
+  email                String               @unique
+  username             String               @unique
+  password             String
+  avatarUrl            String?
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @default(now()) @updatedAt
+  Account              Account[]
+  Session              Session[]
+  ownedOrganizations   Organization[]       @relation("ownedBy")
+  memberOrganizations  OrganizationMember[]
+  ownedWorkflows       Workflow[]
+  ownedWorkflowActions WorkflowAction[]
+  files                File[]
 }
 
 model Account {
@@ -117,12 +118,12 @@ model Workflow {
   displayName String
   description String
 
-  nodes WorkflowNode[]
+  actions WorkflowAction[]
+  nodes   WorkflowNode[]
+  edges   WorkflowEdge[]
 
   owner   User   @relation(fields: [ownerId], references: [id])
   ownerId String @db.ObjectId
-
-  actions WorkflowAction[]
 }
 
 model WorkflowNode {
@@ -134,8 +135,24 @@ model WorkflowNode {
   block   WorkflowBlock @relation(fields: [blockId], references: [id])
   blockId String
 
-  posX Int
-  posY Int
+  posX Float
+  posY Float
+
+  incomingEdges WorkflowEdge[] @relation("targetNode")
+  outgoingEdges WorkflowEdge[] @relation("sourceNode")
+}
+
+model WorkflowEdge {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  workflow   Workflow @relation(fields: [workflowId], references: [id])
+  workflowId String
+
+  sourceNode   WorkflowNode? @relation("sourceNode", fields: [sourceNodeId], references: [id])
+  sourceNodeId String?       @db.ObjectId
+
+  targetNode   WorkflowNode? @relation("targetNode", fields: [targetNodeId], references: [id])
+  targetNodeId String?       @db.ObjectId
 }
 
 model WorkflowBlock {
@@ -183,4 +200,23 @@ enum ActionType {
   DELETE_NODE
   CREATE_EDGE
   DELETE_EDGE
+}
+
+// file uploads
+
+model File {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  displayName String
+  fileName    String
+  mimetype    String
+  createdAt   DateTime  @default(now())
+  assetRole   AssetRole @default(USER_AVATAR)
+  uploader    User      @relation(fields: [uploaderId], references: [id])
+  uploaderId  String
+}
+
+enum AssetRole {
+  USER_AVATAR
+  WORKFLOW_THUMBNAIL
+  WORKFLOW_INPUT
 }

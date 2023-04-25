@@ -1,124 +1,105 @@
-import Image from 'next/image'
-import { Inter } from 'next/font/google'
+import LoadingScreen from "@/components/LoadingScreen";
+import axios from "axios";
+import Head from "next/head";
+import { useRouter } from "next/router";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 
-const inter = Inter({ subsets: ['latin'] })
+export default function Page() {
 
-export default function Home() {
-  return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 w-full max-w-5xl items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">pages/index.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    const { data: selfInfo, isLoading: isLoadingSelfInfo, error: selfInfoError } = useQuery(['self-info'], async () => {
+        const res = await axios.get("/api/me")
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700/10 after:dark:from-sky-900 after:dark:via-[#0141ff]/40 before:lg:h-[360px]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+        return res.data.data
+    });
 
-      <div className="mb-32 grid text-center lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
+    const activeOrganizationId = selfInfo?.organizations?.[0]?.id
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
+    const router = useRouter()
 
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Discover and deploy boilerplate example Next.js&nbsp;projects.
-          </p>
-        </a>
+    const queryClient = useQueryClient()
 
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`${inter.className} mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p
-            className={`${inter.className} m-0 max-w-[30ch] text-sm opacity-50`}
-          >
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    const { mutate } = useMutation(
+        async () => {
+            const res = await axios.post(`/api/organizations/${activeOrganizationId}/flows`)
+            return res.data.data.id
+        },
+        {
+            onSuccess: (newFlowId) => {
+                queryClient.invalidateQueries('flowsData');
+                router.push(`/organizations/${activeOrganizationId}/flows/${newFlowId}`)
+            }
+        }
+    )
+
+    const { data: flowsData, isLoading: isLoadingFlowsData, error: flowsDataError } = useQuery<any[]>(['flowsData', activeOrganizationId], async () => {
+        const res = await axios.get(`/api/organizations/${activeOrganizationId}/flows`)
+        return res.data.data
+    })
+    if (isLoadingSelfInfo || isLoadingFlowsData || flowsData == null || selfInfo == null) return <LoadingScreen />
+
+    return (
+        <>
+            <Head>
+                <title>Dashboard - Cascade</title>
+            </Head>
+            <div className="bg-gray-800" style={{ minHeight: "100vh", display: "flex" }}>
+
+                <div className="flex flex-wrap gap-10 h-fit">
+
+                    {flowsData.map(i => <div key={i.id} className="flex flex-col border-gray-700 border bg-gray-700" style={{
+                        width: "32rem",
+                        overflow: "hidden",
+                        borderRadius: "8px"
+                    }}>
+                        <a href={`/organizations/${activeOrganizationId}/flows/${i.id}`} style={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            overflow: "hidden",
+
+                            height: "14rem",
+                            width: "32rem",
+                        }}>
+                            <img src="https://picsum.photos/200/300" 
+                            style={{ minWidth: "100%", minHeight: "100%" }} />
+                        </a>
+                        <div className="flex">
+                            <div className="flex items-center justify-center h-full w-28" style={{ minHeight: "7rem" }}>
+                                <button className="flex items-center justify-center w-12 h-12 rounded-full hover:brightness-110 duration-100" style={{ background: "#3856C5" }}>
+                                    <svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M14.507 8.98751L2.93354 0.345248C2.62548 0.115443 2.27731 0 1.9281 0C0.819783 0.00250429 0 1.11225 0 2.3585V19.643C0 20.9001 0.82782 22 1.9289 22C2.27803 22 2.62652 21.8842 2.93474 21.654L14.5082 13.0117C15.0816 12.5819 15.4312 11.8208 15.4312 11.0008C15.4312 10.1807 15.0816 9.41962 14.507 8.98751Z" fill="white" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div style={{
+                                display: "flex",
+                                flexDirection: "column",
+
+                                padding: "0.5rem",
+                                paddingLeft: "1rem",
+                                paddingRight: "1rem",
+
+                                gap: "4px",
+                            }}>
+                                <h2 style={{ color: "white", fontWeight: "bold", fontSize: "16px" }}>{i.displayName}</h2>
+                                {/* <p style={{ color: "#999", fontWeight: 600, fontSize: "12px" }}>{i.description}</p> */}
+                                <p style={{ color: "#999", fontWeight: 600, fontSize: "12px" }}>Runs weekly | Edited 20h ago</p>
+                            </div>
+                        </div>
+                    </div>)}
+                    <button className="flex flex-col border-gray-700 border" onClick={() => mutate()} style={{
+                        width: "22.4rem",
+                        overflow: "hidden",
+                        borderRadius: "8px",
+                        height: "12rem",
+
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}>
+                        <h2 style={{ color: "white", fontWeight: "bold" }}>Create a new flow</h2>
+                    </button>
+                </div>
+            </div>
+        </>
+    )
 }

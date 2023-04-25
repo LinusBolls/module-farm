@@ -1,0 +1,107 @@
+.app-grid {
+  position: absolute;
+  display: grid;
+  overflow: hidden;
+
+  grid-template-areas: "inboxes-header chat-header info-header" "inboxes chat info";
+
+  grid-template-columns: 256px auto 256px;
+  grid-template-rows: 72px calc(100vh - 72px);
+
+  width: 100vw;
+  height: 100vh;
+
+  left: 0;
+  top: 0;
+}
+
+.modal-background {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.app-grid-centerer {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 100vw;
+  height: 100vh;
+
+  pointer-events: none;
+}
+.inboxes-header {
+  grid-area: inboxes-header;
+
+  position: relative;
+  z-index: 10;
+}
+.inbox-contents-header {
+  position: relative;
+  z-index: 10;
+  grid-area: inbox-contents-header;
+}
+.chat-header {
+  grid-area: chat-header;
+
+  position: relative;
+  z-index: 10;
+}
+.info-header {
+  grid-area: info-header;
+
+  position: relative;
+  z-index: 10;
+}
+
+.app-grid-centerer * {
+  pointer-events: auto;
+}
+
+/* .app {
+  background: var(--gray-accent);
+} */
+
+/* .app > * {
+  background: var(--white);
+} */
+
+.subheader {
+  grid-area: 2 / 1 / 2 / 5;
+
+  position: relative;
+  z-index: 9;
+}
+
+.appHeader {
+  display: flex;
+  align-items: center;
+}
+
+.inboxes {
+  grid-area: inboxes;
+
+  position: relative;
+  z-index: 8;
+}
+
+.inbox-contents {
+  grid-area: inbox-contents;
+
+  position: relative;
+  z-index: 7;
+}
+
+.chat {
+  grid-area: chat;
+
+  position: relative;
+  z-index: 5;
+}
+
+.info {
+  grid-area: info;
+
+  position: relative;
+  z-index: 6;
+}

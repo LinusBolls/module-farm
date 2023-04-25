@@ -2,7 +2,6 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/prisma/client'
 import nextConnect from 'next-connect'
 import { getSession } from 'next-auth/react'
-import { emojis } from '@/emojis'
 
 const handler = nextConnect<NextApiRequest, NextApiResponse>()
 
@@ -14,9 +13,9 @@ handler.get(async (req, res) => {
         return
     }
 
-    const { organizationId } = req.query
+    const { organizationId, flowId } = req.query
 
-    if (typeof organizationId !== "string") {
+    if (typeof organizationId !== "string" || typeof flowId !== "string") {
         res.status(400).json({ message: "Invalid query parameters." })
         return
     }
@@ -48,37 +47,55 @@ handler.get(async (req, res) => {
         return
     }
 
-    // Replace 'REQUIRED_PERMISSION_ID' with the actual permission ID you want to check for
-    // const hasPermission = organizationMember.permissions.some(permission => permission.id === 'REQUIRED_PERMISSION_ID')
-
-    // if (!hasPermission) {
-    //     res.status(403).json({ message: 'User does not have the required permission to view workflows.' })
-    //     return
-    // }
-
     try {
-        const workflows = await prisma.workflow.findMany({
+        const workflow = await prisma.workflow.findUnique({
             where: {
-                ownerId: userId,
+                id: flowId,
+            },
+            include: {
+                nodes: {
+                    include: {
+                        block: true,
+                    },
+                },
+                edges: {
+                    include: {
+                        sourceNode: true,
+                        targetNode: true,
+                    },
+                },
             },
         })
 
-        res.status(200).json({ success: true, data: workflows })
+        res.status(200).json({
+            success: true, data: {
+                nodes: [],
+                edges: [],
+                ...workflow,
+            }
+        })
     } catch (error) {
-        res.status(400).json({ success: false, error: (error as any).message })
+        res.status(400).json({ success: false, error: (error as any).message ?? "unknown error" })
     }
 })
+handler.put(async (req, res) => {
 
-handler.post(async (req, res) => {
-    const session = await getSession({ req })
+    console.log("dings:", req.headers.cookie)
 
+    let session
+
+    try {
+
+    session = await getSession({ req })
+} catch(err) {console.log(err)}
     if (session == null) {
         res.status(401).json({ message: 'Not authenticated' })
         return
     }
-    const { organizationId } = req.query
 
-    if (typeof organizationId !== "string") {
+    const { organizationId, flowId } = req.query
+
+    if (typeof organizationId !== "string" || typeof flowId !== "string") {
         res.status(400).json({ message: "Invalid query parameters." })
         return
     }
@@ -103,41 +120,35 @@ handler.post(async (req, res) => {
                 userId,
             },
         },
-        include: {
-            permissions: true,
-        },
     })
 
     if (!organizationMember) {
         res.status(403).json({ message: 'User is not a member of the specified organization.' })
         return
     }
-
-    // Replace 'REQUIRED_PERMISSION_ID' with the actual permission ID you want to check for
-    const hasPermission = organizationMember.permissions.some(permission => permission.key === 'CREATE_FLOWS')
-
-    if (!hasPermission) {
-        res.status(403).json({ message: 'User does not have the required permission to create a workflow.' })
-        return
-    }
-    const emoji = emojis[Math.floor(Math.random() * emojis.length)].emoji
-    const title = "Untitled flow"
-    const description = ""
+    const { emoji, displayName, description } = req.body
 
     try {
-        const newWorkflow = await prisma.workflow.create({
+        const workflow = await prisma.workflow.update({
+            where: {
+                id: flowId,
+            },
             data: {
-                emoji,
-                displayName: title,
-                description,
-                ownerId: userId,
+                ...(emoji == null ? {} : { emoji }),
+                ...(displayName == null ? {} : { displayName }),
+                ...(description == null ? {} : { description }),
             },
         })
 
-        res.status(201).json({ success: true, data: newWorkflow })
+        res.status(200).json({
+            success: true, data: {
+                nodes: [],
+                edges: [],
+                ...workflow,
+            }
+        })
     } catch (error) {
-        res.status(400).json({ success: false, error: (error as any).message })
+        res.status(400).json({ success: false, error: (error as any).message ?? "unknown error" })
     }
 })
-
 export default handler

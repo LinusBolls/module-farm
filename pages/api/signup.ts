@@ -24,7 +24,8 @@ handler.post(async (req, res) => {
             displayName: organizationName,
             members: {
               create: {
-                user: { connect: { email } }
+                user: { connect: { email } },
+                permissions: { connect: { key: "CREATE_FLOWS" } },
               }
             }
           }
@@ -40,7 +41,7 @@ handler.post(async (req, res) => {
     })
     res.status(200).json({ success: true, data: user })
   } catch (error) {
-    res.status(400).json({ success: false, error: error.message })
+    res.status(400).json({ success: false, error: (error as any).message })
   }
 })
 export default handler

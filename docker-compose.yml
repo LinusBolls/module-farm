@@ -39,6 +39,8 @@ services:
         "mongoReplSet"
       ]
   modulefarm:
+    environment:
+      - ENVIRONMENT=dev # or production
     container_name: modulefarm
     build: 
       context: .
@@ -50,7 +52,7 @@ services:
       - /usr/src/app/.next
     ports:
       - 3000:3000
-    command: npm run dev
+    command: npm run ${ENVIRONMENT}
 
   realtime-service:
     container_name: realtime-service

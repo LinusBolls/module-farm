@@ -2,7 +2,7 @@ import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * if signed in, redirect from /signin and /signup to /dashboard
+ * if signed in, redirect from /signin and /signup to /
  * if not, redirect from anywhere to /signin, but let some system relevant urls pass
  * 
  * seriously, why is the new nextjs middleware so scuffed? am i missing something?
@@ -22,7 +22,7 @@ export async function middleware(
   if (["/signin", "/signup"].some(slug => req.nextUrl.pathname.startsWith(slug))) {
     console.log("in dings page")
     if (token != null) {
-      return NextResponse.redirect(new URL('/dashboard', req.url))
+      return NextResponse.redirect(new URL('/', req.url))
     }
     return NextResponse.next();
   }
@@ -30,5 +30,25 @@ export async function middleware(
 
   if (token == null) return NextResponse.redirect(new URL('/signin', req.url))
 
-  return NextResponse.next();
+  // the code below is used to pass the nextjs session cookies on to
+  // the realtime service for authorization
+
+  const realtimeServiceDomain = "localhost:5050"
+
+  const headers = new Headers(req.headers)
+
+  // const setCookieHeader = `${req.cookies.toString()}; Domain=${realtimeServiceDomain}; Path=/; HttpOnly; SameSite=None; Secure`
+  
+
+  const domainValue = `Domain=${realtimeServiceDomain};`
+
+  const setCookieHeader = `${req.cookies.toString()}; ${process.env.NODE_ENV === "production" ? domainValue : ""} Path=/; HttpOnly; SameSite=None`
+
+  headers.set('Set-Cookie', setCookieHeader)
+
+  return NextResponse.next({
+    request: {
+      headers,
+    },
+  })
 }

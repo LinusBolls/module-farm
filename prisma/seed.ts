@@ -12,17 +12,17 @@ async function main() {
             url: "https://openai.com",
             blocks: [
                 {
-                    iconUrl: "",
+                    iconUrl: "https://static-00.iconduck.com/assets.00/openai-icon-505x512-pr6amibw.png",
                     displayName: "GPT-3.5",
                     description: "Take the previous block as input for a GPT-3.5 prompt",
                 },
                 {
-                    iconUrl: "",
+                    iconUrl: "https://static-00.iconduck.com/assets.00/openai-icon-505x512-pr6amibw.png",
                     displayName: "GPT-4",
                     description: "Take the previous block as input for a GPT-4 prompt",
                 },
                 {
-                    iconUrl: "",
+                    iconUrl: "https://static-00.iconduck.com/assets.00/openai-icon-505x512-pr6amibw.png",
                     displayName: "Whisper AI",
                     description: "Takes an audio input and transcribes it into text",
                 },
@@ -34,7 +34,7 @@ async function main() {
             url: "https://slack.com",
             blocks: [
                 {
-                    iconUrl: "",
+                    iconUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Slack_icon_2019.svg/2048px-Slack_icon_2019.svg.png",
                     displayName: "Get slack messages from channel",
                     description: "This is a sample workflow block for Slack.",
                 },
@@ -58,12 +58,12 @@ async function main() {
             url: "https://notion.so",
             blocks: [
                 {
-                    iconUrl: "",
+                    iconUrl: "https://img.icons8.com/ios/512/notion.png",
                     displayName: "Add Transcript Page with Date",
                     description: "This is a sample workflow block for Slack.",
                 },
                 {
-                    iconUrl: "",
+                    iconUrl: "https://img.icons8.com/ios/512/notion.png",
                     displayName: "Update Action or Create Action Items Items in Kanban Board",
                     description: "This is a sample workflow block for Slack.",
                 },
