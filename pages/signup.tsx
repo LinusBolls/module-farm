@@ -5,6 +5,7 @@ import { useMutation } from "react-query";
 import axios from "axios";
 import classNames from "classnames";
 import Head from "next/head";
+import Link from "next/link";
 
 interface SignUpFormData {
     email: string;
@@ -108,7 +109,7 @@ const SignUpPage: React.FC = () => {
                                 </div>
                             </div>
 
-                            <p className="text-gray-500 text-xs font-semibold">Already have an account? <a href="/signin" style={{ color: "#3856C5" }}>Sign in</a></p>
+                            <p className="text-gray-500 text-xs font-semibold">Already have an account? <Link href="/signin" style={{ color: "#3856C5" }}>Sign in</Link></p>
 
                             <div>
                                 <button

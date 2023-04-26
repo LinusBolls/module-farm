@@ -14,8 +14,6 @@ import html2canvas from 'html2canvas';
 
 import io from 'socket.io-client'
 
-import CustomNode from '@/CustomNode';
-
 import 'reactflow/dist/style.css';
 import { EdgesContext, useEdgesProvider } from '@/components/NodeEditor/ApiNode/useEdges';
 import { useDrop } from 'react-dnd';
@@ -31,9 +29,11 @@ import { Input } from '@chakra-ui/react';
 import SocketParticipant from '@/realtime-service/SocketParticipant';
 import LoadingScreen from '@/components/LoadingScreen';
 import Head from 'next/head';
+import Link from 'next/link';
+import ApiNode from '@/components/NodeEditor/ApiNode';
 
 const nodeTypes = {
-    custom: CustomNode,
+    api: ApiNode,
 };
 
 const minimapStyle = {
@@ -166,7 +166,7 @@ const OverviewFlow = () => {
 
         return {
             id: i.id,
-            type: "custom",
+            type: "api",
             position: { x: i.posX, y: i.posY },
             data: {
                 selects: {
@@ -214,7 +214,7 @@ const OverviewFlow = () => {
     const edgesWithUpdatedTypes = edges.map((edge) => {
         if (edge.sourceHandle) {
             // @ts-ignore
-            const edgeType = nodes.find((node) => node.type === 'custom').data.selects[edge.sourceHandle];
+            const edgeType = nodes.find((node) => node.type === 'api').data.selects[edge.sourceHandle];
             edge.type = edgeType;
         }
 
@@ -298,7 +298,7 @@ const OverviewFlow = () => {
 
             setNodes(prev => [...prev, {
                 id,
-                type: 'custom',
+                type: 'api',
                 position: centerOfNode,
                 data: {
                     selects: {
@@ -392,10 +392,10 @@ const OverviewFlow = () => {
             <title>{pageTitle}</title>
         </Head>
         <AppGrid
-            InboxesHeader={<div className="flex items-center w-full h-full px-8 gap-4">
+            InboxesHeader={<Link href="/" className="flex items-center w-full h-full px-8 gap-4">
                 <img className="w-6 h-6 rounded-md hover:border border-gray-500" src={selfInfo.avatarUrl ?? "https://www.seekpng.com/png/small/143-1435868_headshot-silhouette-person-placeholder.png"} />
                 <h2 style={{ fontWeight: "bold", color: "white" }}>{currentOrganization.displayName}</h2>
-            </div>}
+            </Link>}
             ChatHeader={
                 <div className="flex items-center w-full h-full px-8">
 

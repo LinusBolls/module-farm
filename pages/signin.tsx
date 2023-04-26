@@ -4,6 +4,7 @@ import * as yup from "yup";
 import { signIn, useSession } from "next-auth/react";
 import Head from "next/head";
 import classNames from "classnames";
+import Link from "next/link";
 
 interface SignInFormData {
   username: string;
@@ -49,7 +50,7 @@ const LoginPage: React.FC = () => {
       }}>
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
           <h2 className="mt-6 text-3xl font-extrabold text-gray-500">
-            Sign up
+            Sign in
           </h2>
         </div>
         <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-md">
@@ -92,7 +93,7 @@ const LoginPage: React.FC = () => {
                 </div>
               </div>
 
-              <p className="text-gray-500 text-xs font-semibold">Don't have an account? <a href="/signup" style={{ color: "#3856C5" }}>Sign up</a></p>
+              <p className="text-gray-500 text-xs font-semibold">Don't have an account? <Link href="/signup" style={{ color: "#3856C5" }}>Sign up</Link></p>
 
               <div>
                 <button

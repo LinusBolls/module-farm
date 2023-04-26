@@ -1,11 +1,7 @@
 import React, { useState } from "react";
-import { Box, VStack, HStack, Icon, IconButton, Text } from "@chakra-ui/react";
-import { css } from "@emotion/react";
+import { Box, VStack, HStack, IconButton, Text } from "@chakra-ui/react";
 import { ChevronRightIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { useDrag } from "react-dnd";
-import { useQuery } from "react-query";
-import axios from "axios";
-import CustomNode from "@/CustomNode";
 
 type ContainerType = "FOLDER" | "FILE"
 

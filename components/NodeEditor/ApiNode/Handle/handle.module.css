@@ -1,0 +1,58 @@
+.handle.bottom {
+    top: -2.25rem;
+}
+.handle.top {
+    bottom: -2.25rem;
+}
+
+.handle {
+    transition-duration: 0.1s;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 5rem;
+    height: 5rem;
+
+    position: absolute;
+    z-index: 999;
+
+    left: 1rem;
+
+    border-radius: 999px;
+}
+
+.handle:hover {
+    transform: scale(1.8);
+}
+
+.handle.focused:hover {
+    background: rgba(56, 86, 197, 0.3);
+}
+
+.handle.unfocused:hover {
+    background: rgba(153, 153, 153, 0.3);
+}
+
+.core {
+
+    box-shadow: 0 0 16px 0 rgba(0, 0, 0, 0.3);
+
+    color: white;
+
+    width: 2rem;
+    height: 2rem;
+
+    border-radius: 999px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: #999;
+}
+
+.core.focused {
+
+    background-color: #3856C5;
+}

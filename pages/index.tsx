@@ -1,6 +1,7 @@
 import LoadingScreen from "@/components/LoadingScreen";
 import axios from "axios";
 import Head from "next/head";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 
@@ -51,7 +52,7 @@ export default function Page() {
                         overflow: "hidden",
                         borderRadius: "8px"
                     }}>
-                        <a href={`/organizations/${activeOrganizationId}/flows/${i.id}`} style={{
+                        <Link href={`/organizations/${activeOrganizationId}/flows/${i.id}`} style={{
                             display: "flex",
                             alignItems: "center",
                             justifyContent: "center",
@@ -62,7 +63,7 @@ export default function Page() {
                         }}>
                             <img src="https://picsum.photos/200/300" 
                             style={{ minWidth: "100%", minHeight: "100%" }} />
-                        </a>
+                        </Link>
                         <div className="flex">
                             <div className="flex items-center justify-center h-full w-28" style={{ minHeight: "7rem" }}>
                                 <button className="flex items-center justify-center w-12 h-12 rounded-full hover:brightness-110 duration-100" style={{ background: "#3856C5" }}>
