@@ -1,3 +1,9 @@
+/**
+ * represents the white squares that can be connected to each other
+ * and dragged around.
+ * 
+ * used as a custom node type for reactflow.
+ */
 import React, { memo, useState } from 'react';
 import { Handle, Position } from 'reactflow';
 
