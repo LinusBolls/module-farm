@@ -38,10 +38,10 @@ services:
         "--replSet",
         "mongoReplSet"
       ]
-  modulefarm:
+  web-client:
     environment:
-      - ENVIRONMENT=dev # or production
-    container_name: modulefarm
+      - ENVIRONMENT=dev # "dev" or "production"
+    container_name: web-client
     build: 
       context: .
       dockerfile: Dockerfile

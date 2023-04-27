@@ -3,7 +3,7 @@
   display: grid;
   overflow: hidden;
 
-  grid-template-areas: "inboxes-header chat-header info-header" "inboxes chat info";
+  grid-template-areas: "inboxes-header chat-header info-header" "inboxes chat chat";
 
   grid-template-columns: 256px auto 256px;
   grid-template-rows: 72px calc(100vh - 72px);

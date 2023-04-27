@@ -40,7 +40,7 @@ if (process.env.NODE_ENV !== 'production') {
 
 const prisma = new PrismaClient();
 
-const options = {
+export const authOptions = {
   providers: [
     CredentialsProvider({
       // The name to display on the sign-in form (e.g., "Sign in with...")
@@ -119,4 +119,4 @@ const options = {
   },
 };
 // @ts-ignore
-export default (req, res) => NextAuth(req, res, options);
+export default (req, res) => NextAuth(req, res, authOptions);

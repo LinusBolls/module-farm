@@ -1,15 +1,15 @@
-# module farm
+# cascade ai
 
 ## about
-in the hit building-focused videogame [minecraft](https://www.minecraft.net), users are able to save structures to their file system using the structure block (added in minecraft v1.9).
-while there are already some online solutions to share minecraft buildings, this project aims to provide an improved user experience.
+*cascade ai* makes powerful ai workflows available to the common man, pioneering the next generation of automation tools.
+cascade offers a visual drag-and-drop editor for combining integrations with 3rd-party services like notion, slack or jira with the flexibility of chat-gpt.
 
 ![structure block](https://static.wikia.nocookie.net/minecraft_gamepedia/images/0/05/Structure_Block_JE2_BE1.png/revision/latest?cb=20200317230650)
 
 ### features
-- uploading minecraft structures as .nbt files
-- viewing uploaded structures as posts, downloading them, providing step-by-step manuals for building them
-- reacting to other people's buildings
+- create workflows in our simple visual editor
+- COMING SOON: execute workflows to automate complex multi-step tasks
+- COMING SOON: collaborate on workflows in real time
 
 ## setup
 
@@ -23,7 +23,7 @@ while there are already some online solutions to share minecraft buildings, this
 ### development setup
 1. clone the repo: `$ git clone https://github.com/LinusBolls/module-farm`.
 
-2. run `$ npm i` to enable intellisense in your code editor.
+2. run `$ npm i --force` to enable intellisense in your code editor.
 
 3. run `$ npm run start-dev` to start the development docker container with hot reload at [http://localhost:3000](http://localhost:3000).
 

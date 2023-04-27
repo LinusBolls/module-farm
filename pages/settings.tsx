@@ -3,6 +3,7 @@ import React, { ChangeEvent, useCallback } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "react-query";
 
+
 type FormData = {
   avatar: FileList;
 };
@@ -10,17 +11,14 @@ type FormData = {
 const AvatarUpload: React.FC = () => {
   const { register, handleSubmit, formState } = useForm<FormData>();
   const mutation = useMutation(async (formData: FormData) => {
+    const fileData = new FormData();
 
-    console.log(formData.avatar[0])
+    fileData.append('file', formData.avatar[0]);
 
-    const res = await axios.post("/api/files/avatars", formData.avatar[0], {
-      // headers: {
-      //   'Content-Type': `multipart/form-data; boundary=${formData._boundary},
-      // }
-    })
-    alert(JSON.stringify(res.data))
-  }
-  );
+    const res = await axios.post("/api/files/avatars", fileData);
+  
+    alert(JSON.stringify(res.data));
+  });
 
   const onSubmit = useCallback(
     async (data: FormData) => {

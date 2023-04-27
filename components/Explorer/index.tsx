@@ -72,14 +72,13 @@ const ExplorerItem: React.FC<{
                         // backgroundColor: "#222",
                         boxSizing: "border-box",
                         height: "32px",
-                        color: "white",
                         gap: 0,
                         margin: 0,
                         width: "100%",
                         paddingLeft: 0, // item.containerType === "FOLDER" ? (depth * 4) + "px" : (depth * 4) + 8 + "px"
                         paddingRight: "16px",
                     }}
-                    className={`hover:bg-gray-700 cursor-pointer`}
+                    className={`text-white hover:bg-gray-700 cursor-pointer`}
                 // css={css cursor: pointer; padding-left: ${depth * 16}px; &:hover {background - color: #ececec; } }
                 >
                     {Array.from({ length: depth }).map((_, idx) => {

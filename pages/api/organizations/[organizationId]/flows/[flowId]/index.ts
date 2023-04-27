@@ -2,6 +2,8 @@ import { NextApiRequest, NextApiResponse } from 'next'
 import prisma from '@/prisma/client'
 import nextConnect from 'next-connect'
 import { getSession } from 'next-auth/react'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/pages/api/auth/[...nextauth]'
 
 const handler = nextConnect<NextApiRequest, NextApiResponse>()
 
@@ -64,6 +66,7 @@ handler.get(async (req, res) => {
                         targetNode: true,
                     },
                 },
+                thumbnail: true,
             },
         })
 
@@ -80,14 +83,8 @@ handler.get(async (req, res) => {
 })
 handler.put(async (req, res) => {
 
-    console.log("dings:", req.headers.cookie)
+    const session = await getServerSession(req, res, authOptions)
 
-    let session
-
-    try {
-
-    session = await getSession({ req })
-} catch(err) {console.log(err)}
     if (session == null) {
         res.status(401).json({ message: 'Not authenticated' })
         return
@@ -126,7 +123,7 @@ handler.put(async (req, res) => {
         res.status(403).json({ message: 'User is not a member of the specified organization.' })
         return
     }
-    const { emoji, displayName, description } = req.body
+    const { emoji, displayName, description, thumbnailId } = req.body
 
     try {
         const workflow = await prisma.workflow.update({
@@ -134,6 +131,7 @@ handler.put(async (req, res) => {
                 id: flowId,
             },
             data: {
+                ...(thumbnailId == null ? {} : { thumbnailId }),
                 ...(emoji == null ? {} : { emoji }),
                 ...(displayName == null ? {} : { displayName }),
                 ...(description == null ? {} : { description }),

@@ -112,8 +112,7 @@ model WorkflowPermission {
 }
 
 model Workflow {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   emoji       String
   displayName String
   description String
@@ -122,8 +121,11 @@ model Workflow {
   nodes   WorkflowNode[]
   edges   WorkflowEdge[]
 
-  owner   User   @relation(fields: [ownerId], references: [id])
-  ownerId String @db.ObjectId
+  owner       User   @relation(fields: [ownerId], references: [id])
+  ownerId     String @db.ObjectId
+
+  thumbnail   File?  @relation("thumbnail", fields: [thumbnailId], references: [id])
+  thumbnailId String? @db.ObjectId @unique
 }
 
 model WorkflowNode {
@@ -210,13 +212,16 @@ model File {
   fileName    String
   mimetype    String
   createdAt   DateTime  @default(now())
-  assetRole   AssetRole @default(USER_AVATAR)
+  assetRole   AssetRole @default(AVATAR)
   uploader    User      @relation(fields: [uploaderId], references: [id])
   uploaderId  String
+  url String
+
+  workflow    Workflow? @relation("thumbnail")
 }
 
 enum AssetRole {
-  USER_AVATAR
+  AVATAR
   WORKFLOW_THUMBNAIL
   WORKFLOW_INPUT
 }

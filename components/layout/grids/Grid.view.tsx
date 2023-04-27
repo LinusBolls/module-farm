@@ -53,7 +53,7 @@ export function Grid({
         <div className={classNames(styles["info-header"], "border-b border-gray-700")}>{InfoHeader}</div>
         <div className={classNames(styles.inboxes, "border-r border-gray-700")}>{Inboxes}</div>
         <div className={classNames(styles.chat)}>{Chat}</div>
-        <div className={classNames(styles.info, "border-l border-gray-700")}>{Info}</div>
+        {/* <div className={classNames(styles.info, "border-l border-gray-700")}>{Info}</div> */}
       </div>
       <div className={classNames(styles["app-grid-centerer"])}>{Center}</div>
     </>

@@ -12,6 +12,8 @@ import SocketParticipant from './SocketParticipant';
 
 config({ path: '../.env.local' });
 
+console.log("env:", process.env)
+
 const app = express();
 
 app.get("/health", (req, res) => {

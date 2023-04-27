@@ -1,3 +1,5 @@
+import ImageKit from "imagekit";
+
 import React, { useCallback } from 'react';
 import Explorer from "@/components/Explorer"
 import ReactFlow, {
@@ -8,6 +10,7 @@ import ReactFlow, {
     useNodesState,
     useEdgesState,
     ReactFlowInstance,
+    OnConnect,
 } from 'reactflow';
 import { v4 as uuidv4 } from 'uuid';
 import html2canvas from 'html2canvas';
@@ -39,14 +42,72 @@ const nodeTypes = {
 const minimapStyle = {
     height: 120,
 };
+interface ExplorerFiles {
+    services: {
+        id: string
+        displayName: string
+        url: string
+        iconUrl: string
+    }[]
+    blocks: {
+        id: string
+        serviceId: string
+        iconUrl: string
+        displayName: string
+        description: string
+    }[]
+}
+interface WorkflowEdge {
+    id: string
+    workflowId: string
+    sourceNodeId: string
+    targetNodeId: string
+    sourceNode: {
+        id: string
+        workflowId: string
+        blockId: string
+        posX: number
+        posY: number
+    }
+    targetNode: {
+        id: string
+        workflowId: string
+        blockId: string
+        posX: number
+        posY: number
+    }
+}
+interface WorkflowNode {
+    id: string
+    workflowId: string
+    blockId: string
+    posX: number
+    posY: number
+    block: {
+        id: string
+        servideId: string
+        iconUrl: string
+        displayName: string
+        description: string
+    }
+}
+interface FlowData {
+    id: string
+    emoji: string
+    displayName: string
+    description: string
+    ownerId: string
+    nodes: WorkflowNode[]
+    edges: WorkflowEdge[]
+}
 
-const OverviewFlow = () => {
+const Page = () => {
 
     const router = useRouter()
 
     const { organizationId, flowId } = router.query
 
-    const { data: flowData, isLoading: isFlowDataLoading, error: flowDataError } = useQuery({
+    const { data: flowData, isLoading: isFlowDataLoading, error: flowDataError } = useQuery<FlowData>({
         queryKey: ['flow-data', organizationId, flowId],
         queryFn: async () => {
             const res = await axios.get(`/api/organizations/${organizationId}/flows/${flowId}`)
@@ -58,7 +119,10 @@ const OverviewFlow = () => {
     const queryClient = useQueryClient()
 
     const updateFlowDataMutation = useMutation(
-        async (updatedFlowData: any) => {
+        async (updatedFlowData: {displayName?: string, thumbnailId?: string}) => {
+
+            const { thumbnailId, ...rest } = updatedFlowData
+
             const res = await axios.put(
                 `/api/organizations/${organizationId}/flows/${flowId}`,
                 updatedFlowData,
@@ -74,18 +138,16 @@ const OverviewFlow = () => {
         }
     );
 
-    const { data: explorerFiles, isLoading: areExplorerFilesLoading, error: explorerFilesError } = useQuery('explorer-files', async () => {
+    const { data: explorerFiles, isLoading: areExplorerFilesLoading, error: explorerFilesError } = useQuery<ExplorerFiles>('explorer-files', async () => {
         const res = await axios.get("/api/flowEditor/blocks")
 
         return res.data.data
     });
 
-    // @ts-ignore
-    const itemTypess = (explorerFiles?.services ?? []).map(i => ({
+    const itemTypes = (explorerFiles?.services ?? []).map(i => ({
         id: i.id,
         displayName: i.displayName,
         iconUrl: i.iconUrl
-        // @ts-ignore
     })).reduce((obj, i) => ({ ...obj, [i.id]: i }), {
         defaultfolder: {
             id: "defaultfolder",
@@ -94,8 +156,7 @@ const OverviewFlow = () => {
         },
     })
 
-    // @ts-ignore
-    const itemss = (explorerFiles?.blocks ?? []).map(i => ({
+    const items = (explorerFiles?.blocks ?? []).map(i => ({
         id: i.id,
         parentId: null,
         childrenIds: [],
@@ -103,7 +164,6 @@ const OverviewFlow = () => {
         containerType: "FILE",
         displayName: i.displayName,
         iconUrl: "",
-        // @ts-ignore
     })).reduce((obj, i) => ({ ...obj, [i.id]: i }), {
         "1": {
             id: "1",
@@ -116,7 +176,6 @@ const OverviewFlow = () => {
         "4": {
             id: "4",
             parentId: null,
-            // @ts-ignore
             childrenIds: (explorerFiles?.blocks ?? []).map(i => i.id),
             type: "defaultfolder",
             containerType: "FOLDER",
@@ -161,8 +220,7 @@ const OverviewFlow = () => {
         reactFlowInstance.current = i
     }
 
-    // @ts-ignore
-    const firstNodes = (flowData?.nodes ?? []).map(i => {
+    const initialNodes = (flowData?.nodes ?? []).map(i => {
 
         return {
             id: i.id,
@@ -181,8 +239,7 @@ const OverviewFlow = () => {
             },
         }
     })
-    // @ts-ignore
-    const firstEdges = (flowData?.edges ?? []).map(i => {
+    const initialEdges = (flowData?.edges ?? []).map(i => {
 
         return {
             id: i.id,
@@ -193,8 +250,7 @@ const OverviewFlow = () => {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-    // @ts-ignore
-    const onConnect = useCallback((params) => {
+    const onConnect: OnConnect = useCallback((params) => {
         setEdges((eds) => addEdge(params, eds))
     }, []);
 
@@ -205,8 +261,8 @@ const OverviewFlow = () => {
     }, [nodes])
 
     useEffect(() => {
-        setNodes(firstNodes)
-        setEdges(firstEdges)
+        setNodes(initialNodes)
+        setEdges(initialEdges)
     }, [isFlowDataLoading])
 
     // we are using a bit of a shortcut here to adjust the edge type
@@ -269,8 +325,7 @@ const OverviewFlow = () => {
         }
     }
 
-    // @ts-ignore
-    const [{ isOver }, drop] = useDrop(() => ({
+    const [_, drop] = useDrop(() => ({
         accept: 'item',
         drop: (item, monitor) => {
 
@@ -339,22 +394,28 @@ const OverviewFlow = () => {
 
         const canvas = await html2canvas(element);
 
-        const data = canvas.toDataURL('image/jpg');
+        const thumbnailFormdata = await new Promise(res => {
 
-        const link = document.createElement('a');
+            canvas.toBlob((blob) => {
+                const formData = new FormData();
 
-        if (typeof link.download === 'string') {
-            link.href = data;
-            link.download = 'image.jpg';
+                formData.append('file', blob!);
 
-            document.body.appendChild(link);
-
-            link.click();
-
-            document.body.removeChild(link);
-        } else {
-            window.open(data);
+                res(formData)
+            });
+        })
+        interface Thumbnail {
+            id: string
+            displayName: string
+            fileName: string
+            mimetype: "image/png",
+            createdAt: string
+            assetRole: "WORKFLOW_THUMBNAIL",
+            uploaderId: string,
         }
+        const res = await axios.post<Thumbnail>("/api/files/thumbnails", thumbnailFormdata);
+
+        updateFlowDataMutation.mutate({ thumbnailId: res.data.id })
     };
 
     const currentOrganization = selfInfo?.organizations[0]
@@ -400,10 +461,8 @@ const OverviewFlow = () => {
                 <div className="flex items-center w-full h-full px-8">
 
                     <Input
-                        className="focus:outline-none"
+                        className="text-white font-bold focus:outline-none"
                         style={{
-                            fontWeight: "bold",
-                            color: "white",
                             background: "none",
                             flex: 1,
                         }}
@@ -420,7 +479,8 @@ const OverviewFlow = () => {
 
                 <button onClick={handleDownloadImage} style={{ backgroundColor: "#3856C5" }} className="rounded h-8 px-3 flex items-center justify-center text-gray-100 hover:brightness-110 duration-100 active:scale-90">Invite</button>
             </div>}
-            Inboxes={<Explorer items={itemss} itemTypes={itemTypess} topLevelItemIds={["1", "2", "3", "4"]} />}
+            // @ts-ignore
+            Inboxes={<Explorer items={items} itemTypes={itemTypes} topLevelItemIds={["1", "2", "3", "4"]} />}
             Chat={
                 <div className="w-full h-full" ref={screenshotRef}>
                     <div ref={drop} className="w-full h-full bg-gray-900"><EdgesContext.Provider value={edgesValue}>
@@ -432,7 +492,8 @@ const OverviewFlow = () => {
 
                                 e.map(i => {
 
-                                    // @ts-ignore
+                                    if (i.type !== "position" && i.type !== "remove") return
+
                                     const nodeId = i.id
 
                                     const target = nodesRef.current!.filter(j => j.id === nodeId)[0]
@@ -477,4 +538,4 @@ const OverviewFlow = () => {
     </>
 };
 
-export default OverviewFlow;
+export default Page;
