@@ -32,7 +32,8 @@ cascade offers a visual drag-and-drop editor for combining integrations with 3rd
 
 5. **EXCEPTION TO HOT RELOAD:** after installing new dependencies, you will need to run `$ npm run restart-dev`. keep in mind that changing between commits or branches may also affect your dependencies!
 
-6. go into the terminal of the `web-client` container (either through the Docker desktop app or using `$ docker compose run`) and run `$ npx prisma db seed`.
+6. run `$ docker exec -it --name module-farm-web-client npx prisma db seed` to seed the database.
+this will create the different api service types (Slack, Notion, ...), along with a user `test` with password `test`.
 
 ### production setup
 
@@ -40,4 +41,5 @@ cascade offers a visual drag-and-drop editor for combining integrations with 3rd
 
 2. run `$ (export ENVIRONMENT=production; npm run start-dev)` to start the production docker container at [http://localhost:3000](http://localhost:3000).
 
-3. go into the terminal of the `web-client` container (either through the Docker desktop app or using `$ docker compose run`) and run `$ npx prisma db seed`.
+3. run `$ docker exec -it --name module-farm-web-client npx prisma db seed` to seed the database.
+this will create the different api service types (Slack, Notion, ...), along with a user `test` with password `test`.

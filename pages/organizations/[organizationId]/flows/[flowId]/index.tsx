@@ -424,7 +424,7 @@ const Page = () => {
 
     const connectToSocket = () => {
 
-        const rawSocket = io('http://localhost:5050', { path: '/socket', withCredentials: true });
+        const rawSocket = io(process.env.NEXT_PUBLIC_REALTIME_SERVICE_URL!, { path: '/socket', withCredentials: true });
 
         socket.current = new SocketParticipant(rawSocket)
     }

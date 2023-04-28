@@ -36,7 +36,8 @@ export async function middleware(
   // the code below is used to pass the nextjs session cookies on to
   // the realtime service for authorization
 
-  const realtimeServiceDomain = "localhost:5050"
+  // remove protocol (http or https) from url´`
+  const realtimeServiceDomain = process.env.NEXT_PUBLIC_REALTIME_SERVICE_URL!.replace(/https?:\/\//i, "")
 
   const headers = new Headers(req.headers)
 
