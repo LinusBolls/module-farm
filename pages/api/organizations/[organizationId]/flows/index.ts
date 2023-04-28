@@ -131,6 +131,9 @@ handler.post(async (req, res) => {
                 displayName: title,
                 description,
                 ownerId: userId,
+                // thumbnail: {
+                //     create:
+                // },
             },
         })
 

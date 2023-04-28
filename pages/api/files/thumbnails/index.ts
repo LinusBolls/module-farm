@@ -26,6 +26,7 @@ handler.post(async (req, res) => {
 
   const form = new multiparty.Form();
 
+  // @ts-ignore
   const session = await getServerSession(req, res, authOptions)
 
   if (session == null) {

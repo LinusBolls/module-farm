@@ -105,6 +105,15 @@ async function main() {
             displayName: "Edit Flows",
         },
     })
+    // const defaultImage = await prisma.file.create({
+    //     data: {
+    //         displayName: "",
+    //         fileName: "jkawe",
+    //         mimetype: "image/jpg",
+    //         assetRole: "THUMBNAIL",
+    //         url: "",
+    //     },
+    // })
 
     const testUser = await prisma.user.create({
         data: {

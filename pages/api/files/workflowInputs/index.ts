@@ -27,6 +27,7 @@ handler.post(upload.single('file'), async (req, res) => {
     return;
   }
 
+  // @ts-ignore
   const session = await getServerSession(req, res, authOptions)
 
   if (session == null) {

@@ -10,6 +10,7 @@ import { signOut } from "next-auth/react"
 import SettingsIcon from '@mui/icons-material/Settings';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { IKImage } from "imagekitio-react";
+import { PlayArrow } from "@mui/icons-material";
 
 export default function Page() {
 
@@ -83,7 +84,7 @@ export default function Page() {
                         </button>
                     </div>
 
-                    <div className="gap-8 grid grid-cols-2 max-lg:grid-cols-1">
+                    <div className="gap-8 grid grid-cols-3 max-xl:grid-cols-2 max-lg:grid-cols-1">
 
                         {flowsData.map(i => <div key={i.id} className="shrink-0 flex flex-col border-gray-700 border bg-gray-700 w-full" style={{
                             // width: "32rem",
@@ -91,40 +92,22 @@ export default function Page() {
                             borderRadius: "8px"
 
                         }}>
-                            <Link href={`/organizations/${activeOrganizationId}/flows/${i.id}`} style={{
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                overflow: "hidden",
-
-                                height: "14rem",
-                                width: "32rem",
-                            }}>
+                            <Link href={`/organizations/${activeOrganizationId}/flows/${i.id}`} className="flex items-center justify-center w-full aspect-video overflow-hidden">
                                 <IKImage
-                                    path={i.thumbnail.url}
+                                    className="w-full h-full"
+                                    path="/workflow-thumbnail-644a757e5eb3a697189dcf7e_xzINvGSIs.jpg"
+
                                 />
                             </Link>
-                            <div className="flex">
-                                <div className="flex items-center justify-center h-full w-28" style={{ minHeight: "7rem" }}>
-                                    <button className="flex items-center justify-center w-12 h-12 rounded-full hover:brightness-110 duration-100" style={{ background: "#3856C5" }}>
-                                        <svg width="16" height="22" viewBox="0 0 16 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                            <path d="M14.507 8.98751L2.93354 0.345248C2.62548 0.115443 2.27731 0 1.9281 0C0.819783 0.00250429 0 1.11225 0 2.3585V19.643C0 20.9001 0.82782 22 1.9289 22C2.27803 22 2.62652 21.8842 2.93474 21.654L14.5082 13.0117C15.0816 12.5819 15.4312 11.8208 15.4312 11.0008C15.4312 10.1807 15.0816 9.41962 14.507 8.98751Z" fill="white" />
-                                        </svg>
+                            <div className="flex h-16">
+                                <div className="flex items-center justify-center h-full aspect-square">
+                                    <button className="flex items-center justify-center w-10 aspect-square rounded-full hover:brightness-110 duration-100" style={{ background: "#3856C5" }}>
+                                        <PlayArrow fontSize="medium" htmlColor="white"/>
                                     </button>
                                 </div>
-                                <div style={{
-                                    display: "flex",
-                                    flexDirection: "column",
-
-                                    padding: "0.5rem",
-                                    paddingLeft: "1rem",
-                                    paddingRight: "1rem",
-
-                                    gap: "4px",
-                                }}>
-                                    <h2 style={{ color: "white", fontWeight: "bold", fontSize: "16px" }}>{i.displayName}</h2>
-                                    {/* <p style={{ color: "#999", fontWeight: 600, fontSize: "12px" }}>{i.description}</p> */}
-                                    <p style={{ color: "#999", fontWeight: 600, fontSize: "12px" }}>Runs weekly | Edited 20h ago</p>
+                                <div className="flex flex-col justify-center gap-1">
+                                    <h2 className="text-white font-bold text-base text-ellipsis overflow-hidden whitespace-nowrap grow-1">{i.displayName}</h2>
+                                    <p style={{ color: "#999" }} className="text-xs font-semibold text-ellipsis overflow-hidden">Edited 20h ago</p>
                                 </div>
                             </div>
                         </div>)}

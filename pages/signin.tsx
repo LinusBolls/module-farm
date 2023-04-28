@@ -93,7 +93,7 @@ const LoginPage: React.FC = () => {
                 </div>
               </div>
 
-              <p className="text-gray-500 text-xs font-semibold">Don't have an account? <Link href="/signup" style={{ color: "#3856C5" }}>Sign up</Link></p>
+              <p className="text-gray-500 text-xs font-semibold">Don&#39;t have an account? <Link href="/signup" style={{ color: "#3856C5" }}>Sign up</Link></p>
 
               <div>
                 <button

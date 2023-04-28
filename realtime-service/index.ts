@@ -10,9 +10,7 @@ import { config } from "dotenv"
 import winston from 'winston';
 import SocketParticipant from './SocketParticipant';
 
-config({ path: '../.env.local' });
-
-console.log("env:", process.env)
+config({ path: './.env.local' });
 
 const app = express();
 
@@ -56,7 +54,7 @@ if (process.env.NODE_ENV !== 'production') {
 const io = new SocketServer(httpServer, {
     path: '/socket',
     cors: {
-        origin: 'http://localhost:3000',
+        origin: process.env.NEXTAUTH_URL,
         methods: ['GET', 'POST'],
         credentials: true,
     },
@@ -75,7 +73,7 @@ io.use((socket, next) => {
 
         const tokenPayload = await decode({
             token: tokenStr,
-            secret: "lkawjerlkj",
+            secret: process.env.SECRET!,
         });
         // @ts-ignore
         if (tokenPayload == null) return next("invalid session token")
@@ -92,7 +90,8 @@ io.use((socket, next) => {
                 ownedWorkflows: true,
             },
         });
-        console.log("user:", user)
+        // @ts-ignore
+        if (user == null) return next("unknown user")
         // @ts-ignore
         socket.user = user
 

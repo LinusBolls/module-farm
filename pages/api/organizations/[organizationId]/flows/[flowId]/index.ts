@@ -83,6 +83,7 @@ handler.get(async (req, res) => {
 })
 handler.put(async (req, res) => {
 
+    // @ts-ignore
     const session = await getServerSession(req, res, authOptions)
 
     if (session == null) {
